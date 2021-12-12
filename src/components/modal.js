@@ -1,6 +1,5 @@
 export {
     closeByEscape,
-    renameButton,
     openPopup,
     closePopup,
     resetForm,
@@ -34,11 +33,9 @@ function changeProfileName() {
     descriptionProfile.textContent = descriptionEditForm.value;
 }
 
-function setPopupOpenHandler(popupWindow, button, form, buttonToLock) {
+function setPopupOpenHandler(popupWindow, button) {
     button.addEventListener("click", function (event) {
         event.preventDefault();
-        resetForm(form, buttonToLock);
-        console.log(`form has been reseted`);
         openPopup(popupWindow);
     });
 }
@@ -46,8 +43,6 @@ function setPopupOpenHandler(popupWindow, button, form, buttonToLock) {
 function openPopup(popupWindow) {
     popupWindow.classList.add("popup_opened");
     document.addEventListener("keydown", closeByEscape);
-    console.log(`keydown added`);
-
 }
 
 function closePopup(popupWindow) {                      
@@ -65,7 +60,6 @@ function setPopupCloseHandler(popupWindow, button) {
 function closeByEscape(event) {
     if (event.key === "Escape") {
         const openedPopup = document.querySelector(".popup_opened");
-        console.log("Esc");
         closePopup(openedPopup);
     }
 }
@@ -74,10 +68,3 @@ function resetForm(form, button) {
     form.reset();
     button.disabled = true;
 }
-
-const renameButton = (popup, form, button) => {
-    button.textContent = "Сохраняем...";
-    closePopup(popup);
-    resetForm(form, button);
-    button.textContent = "Сохранить";
-};
