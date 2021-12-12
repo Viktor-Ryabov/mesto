@@ -77,7 +77,6 @@ function sendProfileDataToServer(description, Avtor) {
         body: JSON.stringify({
             about: `${description}`,
             name: `${Avtor}`,
-            _id: "873635d1fbd008b99ae7cf14",
         }),
     }).then((res) => requestResult(res));
 }

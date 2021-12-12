@@ -47,16 +47,16 @@ const avatarLogoButton = document.querySelector(".profile__change-avatar-logo");
 const saveAvatarButton = document.querySelector("#saveAvatarButton");
 const formAvatar = document.forms["changeAvatarForm"];
 const changeAvatarPopup = document.querySelector("#changeAvatarPopup");
-const popapCloseCard = document.querySelector("#popapCloseCard");
 const avatarLinkToChange = formAvatar.elements.linkAvatarFoto;
 const popups = document.querySelectorAll(".popup");
 
 setPopupOpenHandler(editFormMesto, buttonAddCard, editMesto);
 setPopupOpenHandler(changeAvatarPopup, avatarLogoButton);
-setPopupCloseHandler(deleteCardsPopup, popapCloseCard);
-setPopupCloseHandler(editFormProfile, popapCloseCard);
-setPopupCloseHandler(editFormMesto, popapCloseCard);
-setPopupCloseHandler(changeAvatarPopup, popapCloseCard);
+
+setPopupCloseHandler(deleteCardsPopup);
+setPopupCloseHandler(editFormProfile);
+setPopupCloseHandler(editFormMesto);
+setPopupCloseHandler(changeAvatarPopup);
 
 turnOnValidation({
     formSelector: ".popup__form",
@@ -80,108 +80,13 @@ Promise.all([getUserInfo(), getCardsInfo()])
         avatarKorolia.style.backgroundImage = `url(${user.avatar})`;
         initialCards.forEach(function (data) {
             const card = createCard(data.name, data.link, data.likes.length);
-            const deleteButton = card.querySelector(".card__delete-button");
-            const cardButtonLike = card.querySelector(".card__button-like");
-            const numberOfLikes = card.querySelector("#numberOfLikes");
-            let baseNumberOfLikes = data.likes.length;
-
-            //активные лайки
-            let likes = data.likes;
-            likes.forEach(function (like) {
-                if (like._id == user._id) {
-                    card.querySelector(".card__button-like").classList.add(
-                        "card__button-like_active"
-                    );
-                }
-            });
-
-            //переключение лайков
-            cardButtonLike.addEventListener("click", function (event) {
-                if (
-                    !cardButtonLike.classList.contains(
-                        "card__button-like_active"
-                    )
-                ) {
-                    putLikesAPI(data._id)
-                        .then(
-                            (numberOfLikes.textContent = baseNumberOfLikes + 1)
-                        )
-                        .then(
-                            (baseNumberOfLikes = Number(
-                                numberOfLikes.textContent
-                            ))
-                        )
-                        .then(
-                            cardButtonLike.classList.add(
-                                "card__button-like_active"
-                            )
-                        )
-                        .catch((error) => {
-                            console.log(
-                                `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
-                            );
-                        });
-                } else {
-                    deleteLikesAPI(data._id)
-                        .then(
-                            (numberOfLikes.textContent = Number(
-                                baseNumberOfLikes - 1
-                            ))
-                        )
-                        .then(
-                            (baseNumberOfLikes = Number(
-                                numberOfLikes.textContent
-                            ))
-                        )
-                        .then(
-                            cardButtonLike.classList.remove(
-                                "card__button-like_active"
-                            )
-                        )
-                        .catch((error) => {
-                            console.log(
-                                `При удалении like произошла ошибка: ${error.status} - ${error.statusText}`
-                            );
-                        });
-                }
-            });
-
-            //кнопки удаления
-            if (data.owner._id != user._id) {
-                deleteButton.remove();
-            } else {
-                deleteButton.addEventListener("click", function (event) {
-                    openPopup(deleteCardsPopup);
-                    let idCardToDelete = "";
-                    event.preventDefault();
-                    idCardToDelete = data._id;
-                    // console.log("deleteButton: ", idCardToDelete);
-
-                    confirmToDeleteButton.addEventListener(
-                        "click",
-                        function (event) {
-                            event.preventDefault();
-                            deleteCardsAPI(idCardToDelete)
-                                .then(closePopup(deleteCardsPopup))
-                                .then(card.remove())
-                                .then((idCardToDelete = ""))
-                                .catch((error) => {
-                                    console.log(
-                                        `При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`
-                                    );
-                                })
-                                .finally((data) => {
-                                    console.log(`Post deleted ${data}`);
-                                });
-                        }
-                    );
-                });
-            }
             addCard(card);
         });
     })
     .catch((error) => {
-        catchErrorMessage(error);
+        console.log(
+            `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
+        );
     });
 
 popups.forEach((popupWindow) => {
@@ -204,7 +109,7 @@ avatarButton.addEventListener("click", function (event) {
 
 saveAvatarButton.addEventListener("click", function (event) {
     event.preventDefault();
-    let link = avatarLinkToChange.value;
+    const link = avatarLinkToChange.value;
     changeAvatarAPI(link)
         .then((data) => {
             document.querySelector(
@@ -240,73 +145,6 @@ editFormMesto.addEventListener("submit", function (event) {
     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
         .then((data) => {
             card = createCard(data.name, data.link, data.likes.length);
-            const deleteButton = card.querySelector(".card__delete-button");
-            const cardButtonLike = card.querySelector(".card__button-like");
-            const numberOfLikes = card.querySelector("#numberOfLikes");
-
-            console.log(data._id);
-            cardButtonLike.addEventListener("click", function (event) {
-                event.preventDefault();
-                if (
-                    !cardButtonLike.classList.contains(
-                        "card__button-like_active"
-                    )
-                ) {
-                    putLikesAPI(data._id)
-                        .then((numberOfLikes.textContent = 1))
-                        .then(
-                            cardButtonLike.classList.add(
-                                "card__button-like_active"
-                            )
-                        )
-                        .catch((error) => {
-                            console.log(
-                                `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
-                            );
-                        });
-                } else {
-                    deleteLikesAPI(data._id)
-                        .then((numberOfLikes.textContent = 0))
-                        .then(
-                            cardButtonLike.classList.remove(
-                                "card__button-like_active"
-                            )
-                        )
-                        .catch((error) => {
-                            console.log(
-                                `При удалении like произошла ошибка: ${error.status} - ${error.statusText}`
-                            );
-                        });
-                }
-            });
-
-            deleteButton.addEventListener("click", function (event) {
-                openPopup(deleteCardsPopup);
-                let idCardToDelete = "";
-                event.preventDefault();
-                idCardToDelete = data._id;
-                // console.log("deleteButton: ", idCardToDelete);
-
-                confirmToDeleteButton.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        deleteCardsAPI(idCardToDelete)
-                            .then(closePopup(deleteCardsPopup))
-                            .then(card.remove())
-                            .then((idCardToDelete = ""))
-                            .catch((error) => {
-                                console.log(
-                                    `При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`
-                                );
-                            })
-                            .finally(
-                                console.log(`Post deleted`)
-                            );
-                    }
-                );
-            });
-
             addCard(card);
         })
         .then((saveData.textContent = "Сохраняем..."))

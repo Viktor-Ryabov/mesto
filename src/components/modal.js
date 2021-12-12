@@ -21,6 +21,7 @@ const editFormProfile = document.querySelector("#editFormProfile");
 const editFormMesto = document.querySelector("#editFormMesto");
 const formMesto = document.forms["editMesto"];
 const formProfile = document.forms["editForm"];
+const popapCloseCard = document.querySelector("#popapCloseCard");
 
 const nameProfile = document.querySelector("#nameProfile");
 const nameEditForm = document.querySelector("#nameEditForm");
@@ -50,8 +51,8 @@ function closePopup(popupWindow) {
     document.removeEventListener("keydown", closeByEscape); 
 }
 
-function setPopupCloseHandler(popupWindow, button) {
-    button.addEventListener("click", function (event) {
+function setPopupCloseHandler(popupWindow) {
+    popapCloseCard.addEventListener("click", function (event) {
         event.preventDefault();
         closePopup(popupWindow);
     });
