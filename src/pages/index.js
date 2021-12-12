@@ -36,6 +36,7 @@ import {
     getUserInfo,
     getCardsInfo,
     requestResult,
+    deleteLikesAPI
 } from "../components/api.js";
 import { codePointAt } from "core-js/core/string";
 
@@ -101,19 +102,49 @@ Promise.all([getUserInfo(), getCardsInfo()])
         initialCards.forEach(function (data) {
             const card = createCard(data.name, data.link, data.likes.length);
             const deleteButton = card.querySelector(".card__delete-button");
+            const cardButtonLike = card.querySelector(".card__button-like");
+            const numberOfLikes = card.querySelector("#numberOfLikes");
+            let baseNumberOfLikes = data.likes.length;
 
+            //активные лайки
             let likes = data.likes;
             likes.forEach(function(like) {
                 if (like._id == user._id) {
                     card.querySelector(".card__button-like").classList.add("card__button-like_active");
-                }
-                
+                }                
             });
 
+            //переключение лайков
+            cardButtonLike.addEventListener("click", function(event){
+                
+                // console.log("lIKE");
+                if (!cardButtonLike.classList.contains("card__button-like_active")) {
+                    putLikesAPI(data._id)
+                    .then(numberOfLikes.textContent = baseNumberOfLikes + 1)
+                    .then(console.log(numberOfLikes.textContent))
+                    .then(baseNumberOfLikes = Number(numberOfLikes.textContent))
+                    .then(cardButtonLike.classList.add("card__button-like_active"))
+                    .catch(error => {
+                        console.log(`При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`)
+                    })
+                } else {
+                    deleteLikesAPI(data._id)
+                    .then(numberOfLikes.textContent = Number(baseNumberOfLikes - 1))
+                    .then(console.log(numberOfLikes.textContent))
+                    .then(baseNumberOfLikes = Number(numberOfLikes.textContent))
+                    .then(cardButtonLike.classList.remove("card__button-like_active"))
+                    .catch(error => {
+                        console.log(`При удалении like произошла ошибка: ${error.status} - ${error.statusText}`)
+                    })
+                }
+            })
+
+            //кнопки удаления
             if (data.owner._id != user._id) {
                 deleteButton.remove();
             } else {
                 deleteButton.addEventListener("click", function (event) {
+                    openPopup(deleteCardsPopup);
                     let idCardToDelete = "";
                     event.preventDefault();
                     idCardToDelete = data._id;
@@ -136,7 +167,7 @@ Promise.all([getUserInfo(), getCardsInfo()])
                     })
                 })
             }
-            addCard(card);
+        addCard(card);
         })
     })
     .catch((error) => {
@@ -189,32 +220,6 @@ editFormMesto.addEventListener("submit", function (event) {
     .then(closePopup(editFormMesto))
     .catch((err) => requestResult(err))
 });
-
-
-
-// let idCardToDelete;
-// editFormMesto.addEventListener("submit", function (event) {
-//     event.preventDefault();
-//     const card = createCard(mestoName.value, linkFotoMesto.value);
-//     setDeleteCardHandler(card, card.querySelector(".card__delete-button"));
-//     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-//     .then(addCard(card))
-//     .then(data => {
-//         idCardToDelete = data._id;
-        
-//     })
-//     .catch((err) => requestResult(err))
-// });
-
-// confirmToDeleteButton.addEventListener("submit", function (event) {
-//     event.preventDefault();
-//     console.log(idCardToDelete);
-//     deleteCardsAPI(idCardToDelete);
-//     closePopup(popup);
-//     card.remove();
-// });
-
-
 
 
 

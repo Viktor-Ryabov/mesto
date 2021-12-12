@@ -74,16 +74,14 @@ function addCard(card) {
     cardPlacesSection.prepend(card);
 }
 
-// function addCardsToPage() {}
-
 // function setLikeHandler( buttonLike, card_id = "", number = "", baseNumber = "") {
 //     // buttonLike.addEventListener("click", function (event) {
 //     //     event.preventDefault();
 //     //     if (!buttonLike.classList.contains("card__button-like_active")) {
 //     //         buttonLike.classList.add("card__button-like_active");
 //     //         putLikesAPI(card_id);
-//     //         number.textContent = baseNumber + 1;
-//     //         baseNumber = Number(number.textContent);
+    //         number.textContent = baseNumber + 1;
+    //         baseNumber = Number(number.textContent);
 //     //     } else {
 //     //         buttonLike.classList.remove("card__button-like_active");
 //     //         deleteLikesAPI(card_id);
@@ -111,12 +109,13 @@ function setDeleteCardHandler(popupWindow, deletButton, card) {
         // card.remove();
     });
 }
-// function setNewCardsLikeHandler(likeButton) {
-//     likeButton.addEventListener("click", function (event) {
-//         event.preventDefault();
-//         likeButton.classList.toggle("card__button-like_active");
-//     });
-// }
+
+function setNewCardsLikeHandler(likeButton) {
+    likeButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        likeButton.classList.toggle("card__button-like_active");
+    });
+}
 
 export {
     confirmToDeleteButton,

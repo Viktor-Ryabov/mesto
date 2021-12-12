@@ -29,7 +29,6 @@ const descriptionProfile = document.querySelector("#descriptionProfile");
 const descriptionEditForm = document.querySelector("#descriptionEditForm");
 const avatarKorolia = document.querySelector(".profile__avatar");
 
-
 function changeProfileName() {
     nameProfile.textContent = nameEditForm.value;
     descriptionProfile.textContent = descriptionEditForm.value;
@@ -47,11 +46,13 @@ function setPopupOpenHandler(popupWindow, button, form, buttonToLock) {
 function openPopup(popupWindow) {
     popupWindow.classList.add("popup_opened");
     document.addEventListener("keydown", closeByEscape);
+    console.log(`keydown added`);
+
 }
 
-function closePopup(popupWindow) {
+function closePopup(popupWindow) {                      //не пойму в чем проблема? закрыывется после второго нажатия эскейп
     popupWindow.classList.remove("popup_opened");
-    document.removeEventListener("keydown", closeByEscape);
+    // document.removeEventListener("keydown", closeByEscape); 
 }
 
 function setPopupCloseHandler(popupWindow, button) {
