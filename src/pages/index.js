@@ -85,7 +85,7 @@ Promise.all([getUserInfo(), getCardsInfo()])
     })
     .catch((error) => {
         console.log(
-            `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
+            `При создании карточек произошла ошибка: ${error.status} - ${error.statusText}`
         );
     });
 
