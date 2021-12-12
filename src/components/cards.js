@@ -1,4 +1,5 @@
-import { openPopup } from "../components/modal.js";
+import { openPopup, closePopup } from "../components/modal.js";
+import { putLikesAPI, deleteLikesAPI, deleteCardsAPI } from "./api.js";
 
 const imagePopup = document.querySelector("#image-popup");
 const cardPlacesSection = document.querySelector(".places");
@@ -7,60 +8,42 @@ const confirmToDeleteButton = document.querySelector("#confirmToDeleteButton");
 const popupBigFoto = document.querySelector(".popup__foto");
 const popupBigFotoText = document.querySelector(".popup__discription");
 
-function createCard(name, link, likes) {
+const createCard = (user, data) => {
     const template = document.querySelector("#newCardTemplate").content;
     const card = template.cloneNode(true).querySelector(".card");
     const numberOfLikes = card.querySelector("#numberOfLikes");
     const deleteButton = card.querySelector(".card__delete-button");
     const cardButtonLike = card.querySelector(".card__button-like");
 
-    card.querySelector(".card__title").textContent = name;
-    card.querySelector("img").src = link;
-    card.querySelector("img").alt = name;
+    card.querySelector(".card__title").textContent = data.name;
+    card.querySelector("img").src = data.link;
+    card.querySelector("img").alt = data.name;
 
-    numberOfLikes.textContent = likes;
+    numberOfLikes.textContent = data.likes.length;
 
     setBigFotoHandler(card.querySelector(".card__foto"), imagePopup);
-    setDeleteCardHandler(
-        deleteCardsPopup,
-        card.querySelector(".card__delete-button"),
-        card
-    );
-    // setLikeHandler(card.querySelector(".card__button-like"));
-    
-    let baseNumberOfLikes = data.likes.length;
+    setDeleteCardHandler(deleteCardsPopup, deleteButton, card, data, user);
+    setLikeHandler(cardButtonLike, user, data.likes, data, card, numberOfLikes);
 
-    //активные лайки
-    likes = data.likes;
-    likes.forEach(function (like) {
-        if (like._id == user._id) {
-            card.querySelector(".card__button-like").classList.add(
-                "card__button-like_active"
-            );
-        }
-    });
+    return card;
+}
 
-    //переключение лайков
-    cardButtonLike.addEventListener("click", function (event) {
-        if (
-            !cardButtonLike.classList.contains(
-                "card__button-like_active"
-            )
-        ) {
+const setLikeHandler = (
+    buttonLike,
+    user,
+    dataLikes,
+    data,
+    card,
+    numberOfLikes
+) => {
+    let baseNumberOfLikes = dataLikes.length;
+    buttonLike.addEventListener("click", function (event) {
+        event.preventDefault();
+        if (!buttonLike.classList.contains("card__button-like_active")) {
             putLikesAPI(data._id)
-                .then(
-                    (numberOfLikes.textContent = baseNumberOfLikes + 1)
-                )
-                .then(
-                    (baseNumberOfLikes = Number(
-                        numberOfLikes.textContent
-                    ))
-                )
-                .then(
-                    cardButtonLike.classList.add(
-                        "card__button-like_active"
-                    )
-                )
+                .then((numberOfLikes.textContent = baseNumberOfLikes + 1))
+                .then((baseNumberOfLikes = Number(numberOfLikes.textContent)))
+                .then(buttonLike.classList.add("card__button-like_active"))
                 .catch((error) => {
                     console.log(
                         `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
@@ -69,20 +52,10 @@ function createCard(name, link, likes) {
         } else {
             deleteLikesAPI(data._id)
                 .then(
-                    (numberOfLikes.textContent = Number(
-                        baseNumberOfLikes - 1
-                    ))
+                    (numberOfLikes.textContent = Number(baseNumberOfLikes - 1))
                 )
-                .then(
-                    (baseNumberOfLikes = Number(
-                        numberOfLikes.textContent
-                    ))
-                )
-                .then(
-                    cardButtonLike.classList.remove(
-                        "card__button-like_active"
-                    )
-                )
+                .then((baseNumberOfLikes = Number(numberOfLikes.textContent)))
+                .then(buttonLike.classList.remove("card__button-like_active"))
                 .catch((error) => {
                     console.log(
                         `При удалении like произошла ошибка: ${error.status} - ${error.statusText}`
@@ -90,47 +63,15 @@ function createCard(name, link, likes) {
                 });
         }
     });
-
-    //кнопки удаления
-    if (data.owner._id != user._id) {
-        deleteButton.remove();
-    } else {
-        deleteButton.addEventListener("click", function (event) {
-            openPopup(deleteCardsPopup);
-            let idCardToDelete = "";
-            event.preventDefault();
-            idCardToDelete = data._id;
-            // console.log("deleteButton: ", idCardToDelete);
-
-            confirmToDeleteButton.addEventListener(
-                "click",
-                function (event) {
-                    event.preventDefault();
-                    deleteCardsAPI(idCardToDelete)
-                        .then(closePopup(deleteCardsPopup))
-                        .then(card.remove())
-                        .then((idCardToDelete = ""))
-                        .catch((error) => {
-                            console.log(
-                                `При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`
-                            );
-                        })
-                        .finally((data) => {
-                            console.log(`Post deleted ${data}`);
-                        });
-                }
+    dataLikes.forEach((like) => {
+        if (like._id == user._id) {
+            card.querySelector(".card__button-like").classList.add(
+                "card__button-like_active"
             );
-        });
-    }
-
-    return card;
-}
-
-const setLikeHandler = (buttonLike, likes) => {
-    buttonLike.addEventListener("click", function (event) {
-        event.preventDefault();
-        buttonLike.classList.toggle("card__button-like_active");
+        }
     });
+
+    // buttonLike.classList.toggle("card__button-like_active");
 };
 
 const setBigFotoHandler = (button, popup) => {
@@ -147,15 +88,44 @@ const setBigFotoData = (button) => {
     popupBigFotoText.textContent = button.alt;
 };
 
-function addCard(card) {
-    cardPlacesSection.prepend(card);
+const addCard = (card) => {
+    cardPlacesSection.append(card);
 }
 
-function setDeleteCardHandler(popupWindow, deletButton, card) {
-    deletButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        openPopup(popupWindow);
-    });
+const setDeleteCardHandler = (
+    deleteCardsPopup,
+    deleteButton,
+    card,
+    data,
+    user
+) => {
+    // console.log(user, data);
+    if (data.owner._id != user._id) {
+        deleteButton.remove();
+    } else {
+        deleteButton.addEventListener("click", function (event, idCardToDelete) {
+            event.preventDefault();
+            openPopup(deleteCardsPopup);
+            event.preventDefault();
+            idCardToDelete = data._id;
+            console.log(idCardToDelete);
+            confirmToDeleteButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                deleteCardsAPI(idCardToDelete)
+                    .then(closePopup(deleteCardsPopup))
+                    .then(card.remove())
+                    .then((idCardToDelete = ""))
+                    .catch((error) => {
+                        console.log(
+                            `При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`
+                        );
+                    })
+                    .finally((data) => {
+                        console.log(`Post deleted ${data}`);
+                    });
+            });
+        });
+    }
 }
 
 export {
@@ -164,6 +134,5 @@ export {
     createCard,
     setDeleteCardHandler,
     addCard,
-    setLikeHandler,
     imagePopup,
 };

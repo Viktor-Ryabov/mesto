@@ -49,6 +49,9 @@ const formAvatar = document.forms["changeAvatarForm"];
 const changeAvatarPopup = document.querySelector("#changeAvatarPopup");
 const avatarLinkToChange = formAvatar.elements.linkAvatarFoto;
 const popups = document.querySelectorAll(".popup");
+const avatarButton = document.querySelector("#avatarButton");
+const mestoName = document.querySelector("#mestoName");
+const linkFotoMesto = document.querySelector("#linkFotoMesto");
 
 setPopupOpenHandler(editFormMesto, buttonAddCard, editMesto);
 setPopupOpenHandler(changeAvatarPopup, avatarLogoButton);
@@ -74,12 +77,14 @@ const catchErrorMessage = (error) => {
 Promise.all([getUserInfo(), getCardsInfo()])
     .then(([userData, cards]) => {
         const user = userData;
-        const initialCards = cards;
+
         nameProfile.textContent = user.name;
         descriptionProfile.textContent = user.about;
         avatarKorolia.style.backgroundImage = `url(${user.avatar})`;
-        initialCards.forEach(function (data) {
-            const card = createCard(data.name, data.link, data.likes.length);
+
+        cards.forEach(function (data) {
+            // console.log(data.likes)
+            const card = createCard(user, data);
             addCard(card);
         });
     })
@@ -87,7 +92,30 @@ Promise.all([getUserInfo(), getCardsInfo()])
         console.log(
             `При создании карточек произошла ошибка: ${error.status} - ${error.statusText}`
         );
-    });
+    })
+
+    .then(([userData, cards]) => {
+        console.log(userData)
+        const user = userData[0]
+        editFormMesto.addEventListener("submit", function (event) {
+            event.preventDefault();
+            addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
+            .then(newCard => {
+                let card = createCard(user, newCard); 
+                addCard(card);
+            })
+        })
+    })
+        
+        // .then((saveData.textContent = "Сохраняем..."))
+        // .then(closePopup(editFormMesto))
+        // .then(resetForm(editMesto, saveDataButton))
+        // .catch(
+        //     (error) =>
+        //         `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
+        // )
+        // .finally((saveData.textContent = "Сохранить"));
+        // });
 
 popups.forEach((popupWindow) => {
     popupWindow.addEventListener("click", (event) => {
@@ -131,31 +159,30 @@ editFormProfile.addEventListener("submit", function (event) {
         })
         .then((saveData.textContent = "Сохраняем..."))
         .then(closePopup(editFormProfile))
-        .catch((error) => {
+        .catch(() => {
             console.log(
-                `При удалении like произошла ошибка: ${error.status} - ${error.statusText}`
+                `При добавлении карточки возникла ошибка`
             );
         })
         .finally((saveData.textContent = "Сохранить"));
 });
 
-editFormMesto.addEventListener("submit", function (event) {
-    event.preventDefault();
-    let card;
-    addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-        .then((data) => {
-            card = createCard(data.name, data.link, data.likes.length);
-            addCard(card);
-        })
-        .then((saveData.textContent = "Сохраняем..."))
-        .then(closePopup(editFormMesto))
-        .then(resetForm(editMesto, saveDataButton))
-        .catch(
-            (err) =>
-                `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
-        )
-        .finally((saveData.textContent = "Сохранить"));
-});
+// editFormMesto.addEventListener("submit", function (event) {
+//     event.preventDefault();
+//     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
+//         .then((data) => {
+//             card = createCard(user, data);
+//             addCard(card);
+//         })
+//         .then((saveData.textContent = "Сохраняем..."))
+//         .then(closePopup(editFormMesto))
+//         .then(resetForm(editMesto, saveDataButton))
+//         .catch(
+//             (error) =>
+//                 `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
+//         )
+//         .finally((saveData.textContent = "Сохранить"));
+// });
 
 popupOpenProfile.addEventListener("click", function (event) {
     event.preventDefault();
