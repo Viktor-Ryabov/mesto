@@ -50,9 +50,9 @@ function openPopup(popupWindow) {
 
 }
 
-function closePopup(popupWindow) {                      //не пойму в чем проблема? закрыывется после второго нажатия эскейп
+function closePopup(popupWindow) {                      
     popupWindow.classList.remove("popup_opened");
-    // document.removeEventListener("keydown", closeByEscape); 
+    document.removeEventListener("keydown", closeByEscape); 
 }
 
 function setPopupCloseHandler(popupWindow, button) {

@@ -116,12 +116,9 @@ Promise.all([getUserInfo(), getCardsInfo()])
 
             //переключение лайков
             cardButtonLike.addEventListener("click", function(event){
-                
-                // console.log("lIKE");
                 if (!cardButtonLike.classList.contains("card__button-like_active")) {
                     putLikesAPI(data._id)
                     .then(numberOfLikes.textContent = baseNumberOfLikes + 1)
-                    .then(console.log(numberOfLikes.textContent))
                     .then(baseNumberOfLikes = Number(numberOfLikes.textContent))
                     .then(cardButtonLike.classList.add("card__button-like_active"))
                     .catch(error => {
@@ -130,7 +127,6 @@ Promise.all([getUserInfo(), getCardsInfo()])
                 } else {
                     deleteLikesAPI(data._id)
                     .then(numberOfLikes.textContent = Number(baseNumberOfLikes - 1))
-                    .then(console.log(numberOfLikes.textContent))
                     .then(baseNumberOfLikes = Number(numberOfLikes.textContent))
                     .then(cardButtonLike.classList.remove("card__button-like_active"))
                     .catch(error => {
@@ -213,12 +209,67 @@ editFormProfile.addEventListener("submit", function (event) {
 
 editFormMesto.addEventListener("submit", function (event) {
     event.preventDefault();
-    const card = createCard(mestoName.value, linkFotoMesto.value);
-    setDeleteCardHandler(card, card.querySelector(".card__delete-button"));
+    let card;
     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-    .then(addCard(card))
+    .then(data => {
+        // console.log(data)
+        card = createCard(data.name, data.link, data.likes.length)
+        const deleteButton = card.querySelector(".card__delete-button");
+        const cardButtonLike = card.querySelector(".card__button-like");
+        const numberOfLikes = card.querySelector("#numberOfLikes");
+        let baseNumberOfLikes = 0;
+
+        console.log(data._id)
+        cardButtonLike.addEventListener("click", function(event){
+            event.preventDefault();
+            if (!cardButtonLike.classList.contains("card__button-like_active")) {
+                putLikesAPI(data._id)
+                .then(numberOfLikes.textContent = 1)
+                .then(cardButtonLike.classList.add("card__button-like_active"))
+                .catch(error => {
+                    console.log(`При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`)
+                })
+            } else {
+                deleteLikesAPI(data._id)
+                .then(numberOfLikes.textContent = 0)
+                .then(cardButtonLike.classList.remove("card__button-like_active"))
+                .catch(error => {
+                    console.log(`При удалении like произошла ошибка: ${error.status} - ${error.statusText}`)
+                })
+            }
+        })
+        
+        deleteButton.addEventListener("click", function (event) {
+            openPopup(deleteCardsPopup);
+            let idCardToDelete = "";
+            event.preventDefault();
+            idCardToDelete = data._id;
+            console.log("deleteButton: ", idCardToDelete);
+
+            confirmToDeleteButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                console.log("confirmToDeleteButton: ", idCardToDelete);
+                deleteCardsAPI(idCardToDelete)
+                .then(closePopup(deleteCardsPopup))
+                .then(card.remove())
+                .then(idCardToDelete = "")
+                .catch(error => {
+                    console.log(`При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`)
+                })
+                .finally(data => {
+                    console.log(`Post deleted ${data}`)
+                })
+                
+            })
+        })
+        
+    addCard(card)
+    })
     .then(closePopup(editFormMesto))
-    .catch((err) => requestResult(err))
+    .catch((err) => `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`)
+    
+    
+
 });
 
 
