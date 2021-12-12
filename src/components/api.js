@@ -6,7 +6,6 @@ const mestoAPIConfig = {
     },
 };
 
-
 const requestResult = (res) => {
     if (res.ok) {
         return res.json();
@@ -17,26 +16,18 @@ const requestResult = (res) => {
     }
 };
 
-let idUser;
 const getUserInfo = () => {
     return fetch(`${mestoAPIConfig.baseUrl}/users/me`, {
         headers: mestoAPIConfig.headers,
     })
     .then((res) => requestResult(res))
-    .then(data => {
-        idUser = data._id;
-        return idUser
-    })
+    // .then(data => {
+    //     idUser = data._id;
+    //     return idUser
+    // })
 }
-getUserInfo();
 
-const getProfileName = () => {
-    return fetch(`${mestoAPIConfig.baseUrl}/users/me`, {
-        headers: mestoAPIConfig.headers,
-    }).then( res => requestResult(res))
-};
-
-const getCardsAPI = () => {
+const getCardsInfo = () => {
     return fetch(`${mestoAPIConfig.baseUrl}/cards`, {
         headers: mestoAPIConfig.headers,
     }).then( res => requestResult(res))
@@ -103,15 +94,14 @@ const checkLikesAPI = (data) => {
 };
 
 export {
-    getCardsAPI,
+    getCardsInfo,
     deleteCardsAPI,
     putLikesAPI,
     deleteLikesAPI,
     changeAvatarAPI,
     addNewCadrsAPI,
     sendProfileDataToServer,
-    getProfileName,
     checkLikesAPI,
     getUserInfo,
-    idUser
+    requestResult
 };

@@ -4,7 +4,7 @@ import {
     putLikesAPI,
     deleteLikesAPI,
     addNewCadrsAPI,
-    idUser
+    idUser,
 } from "./api.js";
 
 import {
@@ -13,21 +13,11 @@ import {
     openPopup,
     closePopup,
     resetForm,
-    editFormMesto,
-    idCardToDelete
+    idCardToDelete,
 } from "../components/modal.js";
 
-import { reloadPage, renameButton } from "./utils.js";
+import { reloadPage } from "./utils.js";
 import parseFloat from "core-js/fn/number/parse-float";
-
-export {
-    createCard,
-    addCard,
-    addCardsToPage,
-    setLikeHandler,
-    setDeleteCardHandler,
-    imagePopup,
-};
 
 const saveDataButton = document.querySelector("#saveDataButton");
 const imagePopup = document.querySelector("#image-popup");
@@ -35,24 +25,11 @@ const cardPlacesSection = document.querySelector(".places");
 const deleteCardsPopup = document.querySelector("#deleteCardsPopup");
 const confirmToDeleteButton = document.querySelector("#confirmToDeleteButton");
 const editMesto = document.forms["editMesto"];
-const cardButtonLike = document.querySelector("#card__button-like");
+const popupBigFoto = document.querySelector(".popup__foto");
+const popupBigFotoText = document.querySelector(".popup__discription");
 
-// function hideCardsLikes(likesBlock) {
-//     likesBlock.classList.add("card__number-of-likes_no-likes");
-// }
-// function showCardsLikes(likesBlock) {
-//     likesBlock.classList.remove("card__number-of-likes_no-likes");
-// }
 
-// function changeLikesVisability(likesBlock) {
-//     if (likesBlock.textContent != 0) {
-//         showCardsLikes(likesBlock);
-//     } else {
-//         hideCardsLikes(likesBlock);
-//     }
-// }
-
-function createCard(name, link, likes) {
+function createCard(name, link, likes ="") {
     const template = document.querySelector("#newCardTemplate").content;
     const card = template.cloneNode(true).querySelector(".card");
     card.querySelector(".card__title").textContent = name;
@@ -60,106 +37,76 @@ function createCard(name, link, likes) {
     card.querySelector("img").alt = name;
     card.querySelector("#numberOfLikes").textContent = likes;
     setBigFotoHandler(card.querySelector(".card__foto"), imagePopup);
-    setDeleteCardHandler(deleteCardsPopup, card.querySelector(".card__delete-button"));
+    setDeleteCardHandler(deleteCardsPopup, card.querySelector(".card__delete-button"), card);
+    setLikeHandler(card.querySelector(".card__button-like"));
     return card;
 }
 
+const setLikeHandler = (buttonLike, likes) => {
+    buttonLike.addEventListener("submit", function (event) {
+        event.preventDefault();
+            if (!buttonLike.classList.contains("card__button-like_active")) {
+                buttonLike.textContent = likes + 1;
+                // baseNumber = Number(buttonLike.textContent);
+            } else {
+                buttonLike.textContent = likes - 1;
+            //     buttonLike.textContent = Number(baseNumber - 1);
+            //     baseNumber = Number(number.textContent);
+            }
+        })
+}
+
 const setBigFotoHandler = (button, popup) => {
-    button.addEventListener("click", function(event){
+    button.addEventListener("click", function (event) {
         event.preventDefault();
         setBigFotoData(button);
         openPopup(popup);
     });
-}
+};
 
 const setBigFotoData = (button) => {
-    document.querySelector(".popup__foto").src = button.src;
-    document.querySelector(".popup__foto").alt = button.alt;
-    document.querySelector(".popup__discription").textContent = button.alt;
-}
+    popupBigFoto.src = button.src;
+    popupBigFoto.alt = button.alt;
+    popupBigFotoText.textContent = button.alt;
+};
 
 function addCard(card) {
     cardPlacesSection.prepend(card);
 }
 
-function addCardsToPage() {
-    getCardsAPI()
-        .then((newCards) => {
-            newCards.forEach(function (data) {
-                const card = createCard(
-                    data.name,
-                    data.link,
-                    data.likes.length
-                )
+// function addCardsToPage() {}
 
-                data.likes.forEach(function(like){
-                    let id = like._id;
+// function setLikeHandler( buttonLike, card_id = "", number = "", baseNumber = "") {
+//     // buttonLike.addEventListener("click", function (event) {
+//     //     event.preventDefault();
+//     //     if (!buttonLike.classList.contains("card__button-like_active")) {
+//     //         buttonLike.classList.add("card__button-like_active");
+//     //         putLikesAPI(card_id);
+//     //         number.textContent = baseNumber + 1;
+//     //         baseNumber = Number(number.textContent);
+//     //     } else {
+//     //         buttonLike.classList.remove("card__button-like_active");
+//     //         deleteLikesAPI(card_id);
+//     //         number.textContent = Number(baseNumber - 1);
+//     //         baseNumber = Number(number.textContent);
+//     //     }
+//     // });
+// }
 
-                    if (id == idUser) {
-                        card.querySelector(".card__button-like").classList.add("card__button-like_active");
-                    }
-                });
+// function deleteCardFromServer(button, card_id, popup, card) {
+//     button.addEventListener("click", function (event) {
+//         event.preventDefault();
+//         console.log(card_id);
+//         deleteCardsAPI(card_id);
+//         closePopup(popup);
+//         // card.remove();
+//     });
+// }
 
-                setLikeHandler(
-                    card.querySelector(".card__button-like"),
-                    data._id,
-                    card.querySelector("#numberOfLikes"),
-                    data.likes.length
-                );
-
-                // let userId;
-                // getUserID()
-                // .then(data => {
-                //     const userId = data._id
-                // })
-
-                if (data.owner._id != idUser) {
-                    card.querySelector(".card__delete-button").remove();
-                } else {
-                    setPopupOpenHandler(deleteCardsPopup, card.querySelector(".card__delete-button"), data._id)
-                    deleteCardFromServer(confirmToDeleteButton, data._id, deleteCardsPopup);
-                }
-                addCard(card);
-            });
-        })
-        // .catch(error => {
-        //     console.log(`Error status: ${error.status}`)
-        // })
-}
-
-
-
-function setLikeHandler(buttonLike, card_id = "", number = "", baseNumber = "") {
-    buttonLike.addEventListener("click", function (event) {
-        event.preventDefault();
-        if (!buttonLike.classList.contains("card__button-like_active")) {
-            buttonLike.classList.add("card__button-like_active");
-            putLikesAPI(card_id);
-            number.textContent = baseNumber + 1;
-            baseNumber = Number(number.textContent);
-
-        } else {
-            buttonLike.classList.remove("card__button-like_active");
-            deleteLikesAPI(card_id);
-            number.textContent = Number(baseNumber - 1);
-            baseNumber = Number(number.textContent);
-        }
-    });
-}
-
-function deleteCardFromServer(button, card_id, popup, card) {
-    button.addEventListener("click", function (event) {
-        event.preventDefault();
-        console.log(card_id)
-        deleteCardsAPI(card_id);
-        closePopup(popup);
-        // card.remove();
-    });
-}
-
-function setDeleteCardHandler(popupWindow, deletButton) {
+function setDeleteCardHandler(popupWindow, deletButton, card) {
     deletButton.addEventListener("click", function (event) {
         event.preventDefault();
+        // console.log(card);
         openPopup(popupWindow);
         // card.remove();
     });
@@ -171,18 +118,12 @@ function setDeleteCardHandler(popupWindow, deletButton) {
 //     });
 // }
 
-
-editFormMesto.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const card = createCard(mestoName.value, linkFotoMesto.value);
-    setDeleteCardHandler(card, card.querySelector(".card__delete-button"));
-    // setNewCardsLikeHandler(card.querySelector(".card__button-like"));
-    addCard(card);
-    addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-    .then(data => {
-        setLikeHandler(card.querySelector(".card__button-like"), data._id, card.querySelector("#numberOfLikes"), data.likes.length)
-    })
-    renameButton(editFormMesto, editMesto, saveDataButton);
-});
-
-export { deleteCardFromServer, confirmToDeleteButton, deleteCardsPopup };
+export {
+    confirmToDeleteButton,
+    deleteCardsPopup,
+    createCard,
+    setDeleteCardHandler,
+    addCard,
+    setLikeHandler,
+    imagePopup,
+};
