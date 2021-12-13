@@ -30,6 +30,7 @@ const descriptionEditForm = document.querySelector("#descriptionEditForm");
 const avatarKorolia = document.querySelector(".profile__avatar");
 
 function changeProfileName() {
+    console.log("имя сейчас поменяется")
     nameProfile.textContent = nameEditForm.value;
     descriptionProfile.textContent = descriptionEditForm.value;
 }

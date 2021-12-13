@@ -164,9 +164,6 @@ saveAvatarButton.addEventListener("click", function (event) {
     event.preventDefault();
     const link = avatarLinkToChange.value;
     changeAvatarAPI(link)
-        .then(() => {
-            saveData.textContent = "Сохранить";
-        })
         .then((data) => {
             document.querySelector(
                 ".profile__avatar"
@@ -188,9 +185,6 @@ editFormProfile.addEventListener("submit", function (event) {
     changeProfileName();
     sendProfileDataToServer(descriptionEditForm.value, nameEditForm.value)
         .then(() => {
-            saveData.textContent = "Сохранить";
-        })
-        .then(() => {
             closePopup(editFormProfile);
         })
         .catch(() => {
@@ -202,9 +196,6 @@ editFormProfile.addEventListener("submit", function (event) {
 editFormMesto.addEventListener("submit", function (event) {
     event.preventDefault();
     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-        .then(() => {
-            saveData.textContent = "Сохранить";
-        })
         .then((data) => {
             const card = createCard(data.owner, data);
             addCard(card);
