@@ -2,10 +2,7 @@ import "../index.html";
 import "../pages/index.css";
 
 //**КАРТОЧКИ**
-import {
-    createCard,
-    addCard,
-} from "../components/cards.js";
+import { createCard, addCard } from "../components/cards.js";
 
 import { turnOnValidation } from "../components/validate.js";
 
@@ -34,8 +31,6 @@ import {
     deleteLikesAPI,
 } from "../components/api.js";
 
-const deleteCardsPopup = document.querySelector("#deleteCardsPopup");
-const confirmToDeleteButton = document.querySelector("#confirmToDeleteButton");
 const editFormProfile = document.querySelector("#editFormProfile");
 const popupOpenProfile = document.querySelector("#popupOpenProfile");
 const saveData = document.querySelector("#saveData");
@@ -55,8 +50,6 @@ const linkFotoMesto = document.querySelector("#linkFotoMesto");
 
 setPopupOpenHandler(editFormMesto, buttonAddCard, editMesto);
 setPopupOpenHandler(changeAvatarPopup, avatarLogoButton);
-
-setPopupCloseHandler(deleteCardsPopup);
 setPopupCloseHandler(editFormProfile);
 setPopupCloseHandler(editFormMesto);
 setPopupCloseHandler(changeAvatarPopup);
@@ -92,30 +85,22 @@ Promise.all([getUserInfo(), getCardsInfo()])
         console.log(
             `При создании карточек произошла ошибка: ${error.status} - ${error.statusText}`
         );
-    })
+    });
 
-    .then(([userData, cards]) => {
-        console.log(userData)
-        const user = userData[0]
-        editFormMesto.addEventListener("submit", function (event) {
-            event.preventDefault();
-            addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-            .then(newCard => {
-                let card = createCard(user, newCard); 
-                addCard(card);
-            })
+const setConfirmToDelete = (idCardToDelete, cardToDelete) => {
+    deleteCardsAPI(idCardToDelete)
+        .then(() => {
+            cardToDelete.remove();
         })
-    })
-        
-        // .then((saveData.textContent = "Сохраняем..."))
-        // .then(closePopup(editFormMesto))
-        // .then(resetForm(editMesto, saveDataButton))
-        // .catch(
-        //     (error) =>
-        //         `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
-        // )
-        // .finally((saveData.textContent = "Сохранить"));
-        // });
+        .catch((error) => {
+            console.log(
+                `При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`
+            );
+        })
+        .finally((data) => {
+            console.log(`Post with id ${idCardToDelete} deleted `);
+        });
+};
 
 popups.forEach((popupWindow) => {
     popupWindow.addEventListener("click", (event) => {
@@ -128,6 +113,46 @@ popups.forEach((popupWindow) => {
     });
 });
 
+const setLikesSwitch = (button, cardId, numberOfLikes, baseNumberOfLikes) => {
+    if (!button.classList.contains("card__button-like_active")) {
+        putLikesAPI(cardId)
+            //запишем новое значение в карточку baseNumberOfLikes задано в cards.js: baseNumberOfLikes = data.likes.length
+            .then(() => {
+                numberOfLikes.textContent = baseNumberOfLikes + 1;
+            })
+            .then(() => {
+                baseNumberOfLikes = Number(numberOfLikes.textContent);
+            })
+            .then(() => {
+                button.classList.add("card__button-like_active");
+            })
+            .catch((error) => {
+                console.log(
+                    `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
+                );
+            });
+    } else {
+        deleteLikesAPI(cardId)
+            //запишем новое значение в карточку baseNumberOfLikes задано в cards.js: baseNumberOfLikes = data.likes.length
+            .then(() => {
+                numberOfLikes.textContent = Number(
+                    numberOfLikes.textContent - 1
+                );
+            })
+            .then(() => {
+                baseNumberOfLikes = Number(numberOfLikes.textContent);
+            })
+            .then(() => {
+                button.classList.remove("card__button-like_active");
+            })
+            .catch((error) => {
+                console.log(
+                    `При удалении like произошла ошибка: ${error.status} - ${error.statusText}`
+                );
+            });
+    }
+};
+
 avatarButton.addEventListener("click", function (event) {
     event.preventDefault();
     resetForm(formAvatar, saveAvatarButton);
@@ -139,14 +164,22 @@ saveAvatarButton.addEventListener("click", function (event) {
     event.preventDefault();
     const link = avatarLinkToChange.value;
     changeAvatarAPI(link)
+        .then(() => {
+            saveData.textContent = "Сохранить";
+        })
         .then((data) => {
             document.querySelector(
                 ".profile__avatar"
             ).style.backgroundImage = `url("${data.avatar}")`;
         })
-        .then(closePopup(changeAvatarPopup))
+        .then(() => {
+            closePopup(changeAvatarPopup);
+        })
         .catch((error) => {
             catchErrorMessage(error);
+        })
+        .finally(() => {
+            saveData.textContent = "Сохраняем...";
         });
 });
 
@@ -154,35 +187,40 @@ editFormProfile.addEventListener("submit", function (event) {
     event.preventDefault();
     changeProfileName();
     sendProfileDataToServer(descriptionEditForm.value, nameEditForm.value)
-        .then((data) => {
-            console.log(data);
+        .then(() => {
+            saveData.textContent = "Сохранить";
         })
-        .then((saveData.textContent = "Сохраняем..."))
-        .then(closePopup(editFormProfile))
+        .then(() => {
+            closePopup(editFormProfile);
+        })
         .catch(() => {
-            console.log(
-                `При добавлении карточки возникла ошибка`
-            );
+            console.log(`При добавлении карточки возникла ошибка`);
         })
-        .finally((saveData.textContent = "Сохранить"));
+        .finally(() => {(saveData.textContent = "Сохраняем...")});
 });
 
-// editFormMesto.addEventListener("submit", function (event) {
-//     event.preventDefault();
-//     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
-//         .then((data) => {
-//             card = createCard(user, data);
-//             addCard(card);
-//         })
-//         .then((saveData.textContent = "Сохраняем..."))
-//         .then(closePopup(editFormMesto))
-//         .then(resetForm(editMesto, saveDataButton))
-//         .catch(
-//             (error) =>
-//                 `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
-//         )
-//         .finally((saveData.textContent = "Сохранить"));
-// });
+editFormMesto.addEventListener("submit", function (event) {
+    event.preventDefault();
+    addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
+        .then(() => {
+            saveData.textContent = "Сохранить";
+        })
+        .then((data) => {
+            const card = createCard(data.owner, data);
+            addCard(card);
+        })
+        .then(() => {
+            closePopup(editFormMesto);
+            resetForm(editMesto, saveDataButton);
+        })
+        .catch(
+            (error) =>
+                `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
+        )
+        .finally(() => {
+            saveData.textContent = "Сохраняем...";
+        });
+});
 
 popupOpenProfile.addEventListener("click", function (event) {
     event.preventDefault();
@@ -195,3 +233,5 @@ buttonAddCard.addEventListener("click", function (event) {
     event.preventDefault();
     resetForm(editMesto, saveDataButton);
 });
+
+export { setLikesSwitch, setConfirmToDelete };
