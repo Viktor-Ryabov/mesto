@@ -4,7 +4,7 @@ export {
     closePopup,
     resetForm,
     setPopupOpenHandler,
-    setPopupCloseHandler,
+    // setPopupCloseHandler,
     formMesto,
     formProfile,
     nameEditForm,
@@ -21,8 +21,6 @@ const editFormProfile = document.querySelector("#editFormProfile");
 const editFormMesto = document.querySelector("#editFormMesto");
 const formMesto = document.forms["editMesto"];
 const formProfile = document.forms["editForm"];
-const popapCloseCard = document.querySelector("#popapCloseCard");
-
 const nameProfile = document.querySelector("#nameProfile");
 const nameEditForm = document.querySelector("#nameEditForm");
 const descriptionProfile = document.querySelector("#descriptionProfile");
@@ -30,7 +28,7 @@ const descriptionEditForm = document.querySelector("#descriptionEditForm");
 const avatarKorolia = document.querySelector(".profile__avatar");
 
 function changeProfileName() {
-    console.log("имя сейчас поменяется")
+    console.log("имя сейчас поменяется");
     nameProfile.textContent = nameEditForm.value;
     descriptionProfile.textContent = descriptionEditForm.value;
 }
@@ -47,16 +45,9 @@ function openPopup(popupWindow) {
     document.addEventListener("keydown", closeByEscape);
 }
 
-function closePopup(popupWindow) {                      
+function closePopup(popupWindow) {
     popupWindow.classList.remove("popup_opened");
-    document.removeEventListener("keydown", closeByEscape); 
-}
-
-function setPopupCloseHandler(popupWindow) {
-    popapCloseCard.addEventListener("click", function (event) {
-        event.preventDefault();
-        closePopup(popupWindow);
-    });
+    document.removeEventListener("keydown", closeByEscape);
 }
 
 function closeByEscape(event) {

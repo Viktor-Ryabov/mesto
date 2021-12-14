@@ -1,5 +1,5 @@
 import { openPopup } from "../components/modal.js";
-import { setLikesSwitch, setConfirmToDelete } from "../pages/index.js";
+import { addLike, deleteLike, setConfirmToDelete } from "../pages/index.js";
 
 const imagePopup = document.querySelector("#image-popup");
 const cardPlacesSection = document.querySelector(".places");
@@ -19,32 +19,31 @@ const createCard = (user, data) => {
     card.querySelector("img").src = data.link;
     card.querySelector("img").alt = data.name;
     numberOfLikes.textContent = data.likes.length;
-    let baseNumberOfLikes = data.likes.length;
 
-    setBigFotoHandler(card.querySelector(".card__foto"), imagePopup);    
-    
+    setBigFotoHandler(card.querySelector(".card__foto"), imagePopup);
+
     //слушатель лайка
     cardButtonLike.addEventListener("click", function (event) {
         event.preventDefault();
-        console.log(baseNumberOfLikes);
-        setLikesSwitch(cardButtonLike, data._id, numberOfLikes, baseNumberOfLikes, user);
+        if (!cardButtonLike.classList.contains("card__button-like_active")) {
+            addLike(data._id, cardButtonLike, numberOfLikes);
+        } else {
+            deleteLike(data._id, cardButtonLike, numberOfLikes);
+        }
     });
 
-    //слушатель удаления
     if (data.owner._id != user._id) {
         deleteButton.remove();
     } else {
-        
-        
         deleteButton.addEventListener("click", (event) => {
             event.preventDefault();
             const idCardToDelete = data._id;
             setConfirmToDelete(idCardToDelete, card);
-        })
+        });
     }
 
     //я не перебираю все лайки всех карточек
-    const dataLikes = data.likes; 
+    const dataLikes = data.likes;
     //перебираю только лайки карточки которую создаю
     dataLikes.forEach((like) => {
         //каждый лайк сравниваю с ид.юзера
@@ -55,9 +54,7 @@ const createCard = (user, data) => {
         }
     });
     return card;
-}
-
-
+};
 
 const setBigFotoHandler = (button, popup) => {
     button.addEventListener("click", function (event) {
@@ -75,13 +72,6 @@ const setBigFotoData = (button) => {
 
 const addCard = (card) => {
     cardPlacesSection.prepend(card);
-}
-
-
-
-export {
-    deleteCardsPopup,
-    createCard,
-    addCard,
-    imagePopup,
 };
+
+export { deleteCardsPopup, createCard, addCard, imagePopup };

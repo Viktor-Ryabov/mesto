@@ -15,7 +15,6 @@ import {
     setPopupOpenHandler,
     closePopup,
     openPopup,
-    setPopupCloseHandler,
     nameEditForm,
     descriptionEditForm,
 } from "../components/modal.js";
@@ -50,9 +49,6 @@ const linkFotoMesto = document.querySelector("#linkFotoMesto");
 
 setPopupOpenHandler(editFormMesto, buttonAddCard, editMesto);
 setPopupOpenHandler(changeAvatarPopup, avatarLogoButton);
-setPopupCloseHandler(editFormProfile);
-setPopupCloseHandler(editFormMesto);
-setPopupCloseHandler(changeAvatarPopup);
 
 turnOnValidation({
     formSelector: ".popup__form",
@@ -97,7 +93,7 @@ const setConfirmToDelete = (idCardToDelete, cardToDelete) => {
                 `При удалении карточки произошла ошибка: ${error.status} - ${error.statusText}`
             );
         })
-        .finally((data) => {
+        .finally(() => {
             console.log(`Post with id ${idCardToDelete} deleted `);
         });
 };
@@ -113,44 +109,27 @@ popups.forEach((popupWindow) => {
     });
 });
 
-const setLikesSwitch = (button, cardId, numberOfLikes, baseNumberOfLikes) => {
-    if (!button.classList.contains("card__button-like_active")) {
-        putLikesAPI(cardId)
-            //запишем новое значение в карточку baseNumberOfLikes задано в cards.js: baseNumberOfLikes = data.likes.length
-            .then(() => {
-                numberOfLikes.textContent = baseNumberOfLikes + 1;
-            })
-            .then(() => {
-                baseNumberOfLikes = Number(numberOfLikes.textContent);
-            })
-            .then(() => {
-                button.classList.add("card__button-like_active");
-            })
-            .catch((error) => {
-                console.log(
-                    `При добавлении like произошла ошибка: ${error.status} - ${error.statusText}`
-                );
-            });
-    } else {
-        deleteLikesAPI(cardId)
-            //запишем новое значение в карточку baseNumberOfLikes задано в cards.js: baseNumberOfLikes = data.likes.length
-            .then(() => {
-                numberOfLikes.textContent = Number(
-                    numberOfLikes.textContent - 1
-                );
-            })
-            .then(() => {
-                baseNumberOfLikes = Number(numberOfLikes.textContent);
-            })
-            .then(() => {
-                button.classList.remove("card__button-like_active");
-            })
-            .catch((error) => {
-                console.log(
-                    `При удалении like произошла ошибка: ${error.status} - ${error.statusText}`
-                );
-            });
-    }
+const addLike = (cardId, button, likeCount) => {
+    putLikesAPI(cardId)
+        .then((data) => {
+            button.classList.add("card__button-like_active");
+            console.log(`card ${cardId} has been liked`);
+            return (likeCount.textContent = data.likes.length);
+        })
+        .catch((error) => {
+            `oshibochka vishla - ${error.status} - ${error.statusText}`;
+        });
+};
+const deleteLike = (cardId, button, likeCount) => {
+    deleteLikesAPI(cardId)
+        .then((data) => {
+            button.classList.remove("card__button-like_active");
+            console.log(`card ${cardId} has been disliked`);
+            return (likeCount.textContent = data.likes.length);
+        })
+        .catch((error) => {
+            `oshibochka vishla - ${error.status} - ${error.statusText}`;
+        });
 };
 
 avatarButton.addEventListener("click", function (event) {
@@ -160,9 +139,10 @@ avatarButton.addEventListener("click", function (event) {
     openPopup(changeAvatarPopup);
 });
 
-saveAvatarButton.addEventListener("click", function (event) {
+formAvatar.addEventListener("submit", function (event) {
     event.preventDefault();
     const link = avatarLinkToChange.value;
+    saveAvatarButton.textContent = "Сохраняем...";
     changeAvatarAPI(link)
         .then((data) => {
             document.querySelector(
@@ -176,13 +156,14 @@ saveAvatarButton.addEventListener("click", function (event) {
             catchErrorMessage(error);
         })
         .finally(() => {
-            saveData.textContent = "Сохраняем...";
+            saveAvatarButton.textContent = "Сохранить";
         });
 });
 
 editFormProfile.addEventListener("submit", function (event) {
     event.preventDefault();
     changeProfileName();
+    saveData.textContent = "Сохраняем...";
     sendProfileDataToServer(descriptionEditForm.value, nameEditForm.value)
         .then(() => {
             closePopup(editFormProfile);
@@ -190,11 +171,14 @@ editFormProfile.addEventListener("submit", function (event) {
         .catch(() => {
             console.log(`При добавлении карточки возникла ошибка`);
         })
-        .finally(() => {(saveData.textContent = "Сохраняем...")});
+        .finally(() => {
+            saveData.textContent = "Сохранить";
+        });
 });
 
 editFormMesto.addEventListener("submit", function (event) {
     event.preventDefault();
+    saveDataButton.textContent = "Сохраняем...";
     addNewCadrsAPI(mestoName.value, linkFotoMesto.value)
         .then((data) => {
             const card = createCard(data.owner, data);
@@ -209,7 +193,7 @@ editFormMesto.addEventListener("submit", function (event) {
                 `При добавлении новой карточки произошла ошибка: ${error.status} - ${error.statusText}`
         )
         .finally(() => {
-            saveData.textContent = "Сохраняем...";
+            saveDataButton.textContent = "Сохранить";
         });
 });
 
@@ -225,4 +209,4 @@ buttonAddCard.addEventListener("click", function (event) {
     resetForm(editMesto, saveDataButton);
 });
 
-export { setLikesSwitch, setConfirmToDelete };
+export { addLike, deleteLike, setConfirmToDelete };
