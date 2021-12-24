@@ -1,4 +1,4 @@
-import { openPopup } from "../components/modal.js";
+import { openPopup } from "./Popup.js";
 import { addLike, deleteLike, setConfirmToDelete } from "../pages/index.js";
 
 const imagePopup = document.querySelector("#image-popup");

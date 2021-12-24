@@ -4,7 +4,7 @@ import "../pages/index.css";
 //**КАРТОЧКИ**
 import { createCard, addCard } from "../components/cards.js";
 
-import { turnOnValidation } from "../components/validate.js";
+import { turnOnValidation } from "../components/FormValidator.js";
 
 import {
     resetForm,
@@ -17,7 +17,7 @@ import {
     openPopup,
     nameEditForm,
     descriptionEditForm,
-} from "../components/modal.js";
+} from "../components/Popup.js";
 
 import {
     changeAvatarAPI,
