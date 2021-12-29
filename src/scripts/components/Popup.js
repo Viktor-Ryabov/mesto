@@ -1,63 +1,32 @@
-export {
-    closeByEscape,
-    openPopup,
-    closePopup,
-    resetForm,
-    setPopupOpenHandler,
-    // setPopupCloseHandler,
-    formMesto,
-    formProfile,
-    nameEditForm,
-    descriptionEditForm,
-    avatarKorolia,
-    editFormMesto,
-    changeProfileName,
-    editFormProfile,
-    nameProfile,
-    descriptionProfile,
-};
+export class Popup {
+  constructor(popupElement) {
+    this._popupElement = popupElement;
+    // this._popupOverlay = this._popupElement.querySelector(".popup__overlay");
+    // this._popupWindow = document.querySelector(`#${this.popupElement}`);
+    this._popupCloseButton = this._popupElement.querySelector(".popup__close-icon");
+    console.log(this._popupCloseButton);
+    this._closeByEscape = this._closeByEscape.bind(this);
+  }
 
-const editFormProfile = document.querySelector("#editFormProfile");
-const editFormMesto = document.querySelector("#editFormMesto");
-const formMesto = document.forms["editMesto"];
-const formProfile = document.forms["editForm"];
-const nameProfile = document.querySelector("#nameProfile");
-const nameEditForm = document.querySelector("#nameEditForm");
-const descriptionProfile = document.querySelector("#descriptionProfile");
-const descriptionEditForm = document.querySelector("#descriptionEditForm");
-const avatarKorolia = document.querySelector(".profile__avatar");
+  openPopup() {
+    document.addEventListener("keyup", this._closeByEscape);
+    this._popupElement.classList.add("popup_opened");
+  }
 
-function changeProfileName() {
-    console.log("имя сейчас поменяется");
-    nameProfile.textContent = nameEditForm.value;
-    descriptionProfile.textContent = descriptionEditForm.value;
-}
+  closePopup() {
+    document.removeEventListener("keyup", this._closeByEscape);
+    this._popupElement.classList.remove("popup_opened");
+  }
 
-function setPopupOpenHandler(popupWindow, button) {
-    button.addEventListener("click", function (event) {
-        event.preventDefault();
-        openPopup(popupWindow);
-    });
-}
-
-function openPopup(popupWindow) {
-    popupWindow.classList.add("popup_opened");
-    document.addEventListener("keydown", closeByEscape);
-}
-
-function closePopup(popupWindow) {
-    popupWindow.classList.remove("popup_opened");
-    document.removeEventListener("keydown", closeByEscape);
-}
-
-function closeByEscape(event) {
+  _closeByEscape(event) {
     if (event.key === "Escape") {
-        const openedPopup = document.querySelector(".popup_opened");
-        closePopup(openedPopup);
+      this.closePopup();
     }
-}
+  }
 
-function resetForm(form, button) {
-    form.reset();
-    button.disabled = true;
+  setEventListeners() {
+    this._popupCloseButton.addEventListener("click", () => {
+      this.closePopup();
+    });
+  }
 }
