@@ -9,24 +9,22 @@ import { Popup } from "../scripts/components/Popup.js";
 import {
   editMestoPopup,
   buttonAddCard,
-
   editProfilePopup,
-  profileButton
-  
+  profileButton,
 } from "../scripts/utils/constants.js";
 
 
+//Попапы с формой
 const addNewCardPopup = new Popup(editMestoPopup);
 addNewCardPopup.setEventListeners();
 
 buttonAddCard.addEventListener("click", () => {
   addNewCardPopup.openPopup();
-})
+});
 
 const changeProfileNamePopup = new Popup(editProfilePopup);
-editProfilePopup.setEventListeners();
+changeProfileNamePopup.setEventListeners();
 
 profileButton.addEventListener("click", () => {
   changeProfileNamePopup.openPopup();
-})
-
+});

@@ -4,7 +4,6 @@ export class Popup {
     // this._popupOverlay = this._popupElement.querySelector(".popup__overlay");
     // this._popupWindow = document.querySelector(`#${this.popupElement}`);
     this._popupCloseButton = this._popupElement.querySelector(".popup__close-icon");
-    console.log(this._popupCloseButton);
     this._closeByEscape = this._closeByEscape.bind(this);
   }
 
