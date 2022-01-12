@@ -1,305 +1,289 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Проект Mesto</title>
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Проект Mesto</title>
+  </head>
 
-    <body class="page">
-        <header class="header">
+  <body class="page">
+    <header class="header">
+      <img
+        class="header__logo"
+        src="./img/logo__Vector.svg"
+        alt="логотип-проекта"
+      />
+    </header>
+
+    <main class="content">
+      <section class="profile">
+        <div class="profile__avatar" id="avatarButton">
+          <div class="profile__change-avatar-logo"></div>
+        </div>
+
+        <div class="profile__profile-info">
+          <h1 class="profile__title" id="nameProfile">Виктор Рябов</h1>
+          <button
+            id="popupOpenProfile"
+            aria-label="Изменение данных профиля"
+            type="button"
+            class="profile__edit-button"
+          >
             <img
-                class="header__logo"
-                src="./img/logo__Vector.svg"
-                alt="логотип-проекта"
+              class="profile__edit-button-vector"
+              src="./img/edit__Vector.svg"
+              alt="кнопка"
             />
-        </header>
+          </button>
+          <p class="profile__subtitle" id="descriptionProfile">
+            Неустанный путешественник
+          </p>
+        </div>
 
-        <main class="content">
-            <section class="profile">
-                <div class="profile__avatar" id="avatarButton">
-                    <div class="profile__change-avatar-logo"></div>
-                </div>
+        <button
+          id="buttonAddCard"
+          aria-label="Добавление карточки"
+          type="button"
+          class="profile__add-button"
+        >
+          <img
+            class="profile__add-button-vector"
+            src="./img/add__Vector.svg"
+            alt="кнопка-2"
+          />
+        </button>
+      </section>
 
-                <div class="profile__profile-info">
-                    <h1 class="profile__title" id="nameProfile">
-                        Виктор Рябов
-                    </h1>
-                    <button
-                        id="popupOpenProfile"
-                        aria-label="Изменение данных профиля"
-                        type="button"
-                        class="profile__edit-button"
-                    >
-                        <img
-                            class="profile__edit-button-vector"
-                            src="./img/edit__Vector.svg"
-                            alt="кнопка"
-                        />
-                    </button>
-                    <p class="profile__subtitle" id="descriptionProfile">
-                        Неустанный путешественник
-                    </p>
-                </div>
+      <section
+        aria-label="Карточки путешествий с описанием"
+        class="places"
+      ></section>
+    </main>
 
-                <button
-                    id="buttonAddCard"
-                    aria-label="Добавление карточки"
-                    type="button"
-                    class="profile__add-button"
-                >
-                    <img
-                        class="profile__add-button-vector"
-                        src="./img/add__Vector.svg"
-                        alt="кнопка-2"
-                    />
-                </button>
-            </section>
+    <footer class="footer">
+      <p class="footer__copyright">&copy; Mesto Russia</p>
+    </footer>
 
-            <section
-                aria-label="Карточки путешествий с описанием"
-                class="places"
-            ></section>
-        </main>
-
-        <footer class="footer">
-            <p class="footer__copyright">&copy; Mesto Russia</p>
-        </footer>
-
-        <div class="popup" id="editFormProfile">
-            <button
-                id="closeProfile"
-                name="closeProfile"
-                aria-label="Закрыть"
-                type="button"
-                class="popup__close-icon"
-            ></button>
-            <form
-                novalidate
-                autocomplete="on"
-                action="#"
-                class="popup__form"
-                name="editForm"
-                id="editForm"
-                method="POST"
-            >
-                <h3 class="popup__title">Редактировать профиль</h3>
-                <input
-                    minlength="3"
-                    required
-                    name="nameEditForm"
-                    id="nameEditForm"
-                    placeholder="Виктор Рябов"
-                    type="text"
-                    class="popup__field"
-                />
-                <span class="popup__input-error" id="nameEditForm-error"></span>
-                <input
-                    required
-                    minlength="3"
-                    id="descriptionEditForm"
-                    name="descriptionEditForm"
-                    placeholder="Неустанный путешественник"
-                    value=""
-                    type="text"
-                    class="popup__field"
-                />
-                <span
-                    class="popup__input-error"
-                    id="descriptionEditForm-error"
-                ></span>
-                <button
-                    id="saveData"
-                    aria-label="Сохранить"
-                    value="Сохранить"
-                    type="submit"
-                    class="popup__submit-button"
-                >
-                    Сохранить
-                </button>
-                <!-- <button
+    <div class="popup" id="editFormProfile">
+      <button
+        id="closeProfile"
+        name="closeProfile"
+        aria-label="Закрыть"
+        type="button"
+        class="popup__close-icon"
+      ></button>
+      <form
+        novalidate
+        autocomplete="on"
+        action="#"
+        class="popup__form"
+        name="editForm"
+        id="editForm"
+        method="POST"
+      >
+        <h3 class="popup__title">Редактировать профиль</h3>
+        <input
+          minlength="3"
+          required
+          name="nameEditForm"
+          id="nameEditForm"
+          placeholder="Виктор Рябов"
+          type="text"
+          class="popup__field"
+        />
+        <span class="popup__input-error" id="nameEditForm-error"></span>
+        <input
+          required
+          minlength="3"
+          id="descriptionEditForm"
+          name="descriptionEditForm"
+          placeholder="Неустанный путешественник"
+          value=""
+          type="text"
+          class="popup__field"
+        />
+        <span class="popup__input-error" id="descriptionEditForm-error"></span>
+        <button
+          id="saveData"
+          aria-label="Сохранить"
+          value="Сохранить"
+          type="submit"
+          class="popup__submit-button"
+        >
+          Сохранить
+        </button>
+        <!-- <button
                     id="popupCloseProfile"
                     aria-label="Закрыть"
                     type="button"
                     class="popup__close-icon"
                 ></button> -->
-            </form>
-        </div>
+      </form>
+    </div>
 
-        <!--форма для дoбавления карточек-->
-        <div class="popup" id="editFormMesto">
-            <button
-                id="popapCloseCard"
-                aria-label="Закрыть"
+    <!--форма для дoбавления карточек-->
+    <div class="popup" id="editFormMesto">
+      <button
+        id="popapCloseCard"
+        aria-label="Закрыть"
+        type="button"
+        class="popup__close-icon"
+      ></button>
+      <form
+        novalidate
+        autocomplete="on"
+        action="#"
+        class="popup__form"
+        name="editMesto"
+        id="editMesto"
+        method="POST"
+      >
+        <h3 class="popup__title">Новое место</h3>
+        <input
+          minlength="4"
+          required
+          placeholder="Введите название места"
+          name="mestoName"
+          id="mestoName"
+          value=""
+          type="text"
+          class="popup__field"
+        />
+        <span class="popup__input-error" id="mestoName-error"></span>
+        <input
+          minlength="4"
+          required
+          placeholder="Введите ссылку на фото места"
+          id="linkFotoMesto"
+          name="linkFotoMesto"
+          value=""
+          type="url"
+          class="popup__field"
+        />
+        <span class="popup__input-error" id="linkFotoMesto-error"></span>
+        <button
+          id="saveDataButton"
+          aria-label="Сохранить"
+          value="Сохранить"
+          type="submit"
+          class="popup__submit-button"
+        >
+          Сохранить
+        </button>
+      </form>
+    </div>
+    <!--попап с фото-->
+    <div class="popup" id="image-popup">
+      <div class="popup__foto-content">
+        <button
+          id="popapCloseFoto"
+          aria-label="Закрыть"
+          type="button"
+          class="popup__close-icon popup__close-icon_bigFoto"
+        ></button>
+        <img class="popup__foto" src="#" alt="" id="imagePopupOpenButton" />
+        <h4 class="popup__discription">text</h4>
+      </div>
+    </div>
+
+    <!--форма для удаления карточек-->
+    <div class="popup" id="deleteCardsPopup">
+      <button
+        id="popapCloseCard"
+        aria-label="Закрыть"
+        type="button"
+        class="popup__close-icon"
+      ></button>
+      <form
+        novalidate
+        autocomplete="on"
+        action="#"
+        class="popup__form"
+        name="deleteCardsForm"
+        id="deleteCardsForm"
+      >
+        <h3 class="popup__title">Вы уверены?</h3>
+
+        <button
+          id="confirmToDeleteButton"
+          aria-label="Сохранить"
+          value="Сохранить"
+          type="submit"
+          class="popup__submit-button"
+        >
+          Да
+        </button>
+      </form>
+    </div>
+
+    <!--форма для изменения аватара-->
+    <div class="popup" id="changeAvatarPopup">
+      <button
+        id="popapCloseCard"
+        aria-label="Закрыть"
+        type="button"
+        class="popup__close-icon"
+      ></button>
+      <form
+        novalidate
+        autocomplete="on"
+        action="#"
+        class="popup__form"
+        name="changeAvatarForm"
+        id="changeAvatarForm"
+      >
+        <h3 class="popup__title">Обновить аватар</h3>
+        <input
+          minlength="4"
+          required
+          placeholder="Введите ссылку на фото"
+          id="linkAvatarFoto"
+          name="linkAvatarFoto"
+          value=""
+          type="url"
+          class="popup__field"
+        />
+        <span class="popup__input-error" id="linkAvatarFoto-error"></span>
+        <button
+          id="saveAvatarButton"
+          aria-label="Сохранить"
+          value="Сохранить"
+          type="submit"
+          class="popup__submit-button"
+        >
+          Сохранить
+        </button>
+      </form>
+    </div>
+
+    <template id="newCardTemplate">
+      <article class="card">
+        <div class="card__rectangle">
+          <button
+            aria-label="кнопка удаления карточки"
+            type="button"
+            class="card__delete-button"
+            id="deleteButton"
+          ></button>
+          <img class="card__foto" src="#" alt="" />
+          <div class="card__name-like">
+            <h2 class="card__title"></h2>
+            <div class="card__like-zone">
+              <button
+                aria-label="Лайк"
                 type="button"
-                class="popup__close-icon"
-            ></button>
-            <form
-                novalidate
-                autocomplete="on"
-                action="#"
-                class="popup__form"
-                name="editMesto"
-                id="editMesto"
-                <!-- method="POST" -->
-            >
-                <h3 class="popup__title">Новое место</h3>
-                <input
-                    minlength="4"
-                    required
-                    placeholder="Введите название места"
-                    name="mestoName"
-                    id="mestoName"
-                    value=""
-                    type="text"
-                    class="popup__field"
-                />
-                <span class="popup__input-error" id="mestoName-error"></span>
-                <input
-                    minlength="4"
-                    required
-                    placeholder="Введите ссылку на фото места"
-                    id="linkFotoMesto"
-                    name="linkFotoMesto"
-                    value=""
-                    type="url"
-                    class="popup__field"
-                />
-                <span
-                    class="popup__input-error"
-                    id="linkFotoMesto-error"
-                ></span>
-                <button
-                    id="saveDataButton"
-                    aria-label="Сохранить"
-                    value="Сохранить"
-                    type="submit"
-                    class="popup__submit-button"
-                >
-                    Сохранить
-                </button>
-            </form>
-        </div>
-        <!--попап с фото-->
-        <div class="popup" id="image-popup">
-            <div class="popup__foto-content">
-                <button
-                    id="popapCloseFoto"
-                    aria-label="Закрыть"
-                    type="button"
-                    class="popup__close-icon popup__close-icon_bigFoto"
-                ></button>
-                <img
-                    class="popup__foto"
-                    src="#"
-                    alt=""
-                    id="imagePopupOpenButton"
-                />
-                <h4 class="popup__discription">text</h4>
+                class="card__button-like"
+              ></button>
+              <p
+                name="numberOfLikes"
+                id="numberOfLikes"
+                class="card__number-of-likes"
+              ></p>
             </div>
+          </div>
         </div>
-
-        <!--форма для удаления карточек-->
-        <div class="popup" id="deleteCardsPopup">
-            <button
-                id="popapCloseCard"
-                aria-label="Закрыть"
-                type="button"
-                class="popup__close-icon"
-            ></button>
-            <form
-                novalidate
-                autocomplete="on"
-                action="#"
-                class="popup__form"
-                name="deleteCardsForm"
-                id="deleteCardsForm"
-            >
-                <h3 class="popup__title">Вы уверены?</h3>
-
-                <button
-                    id="confirmToDeleteButton"
-                    aria-label="Сохранить"
-                    value="Сохранить"
-                    type="submit"
-                    class="popup__submit-button"
-                >
-                    Да
-                </button>
-            </form>
-        </div>
-
-        <!--форма для изменения аватара-->
-        <div class="popup" id="changeAvatarPopup">
-            <button
-                id="popapCloseCard"
-                aria-label="Закрыть"
-                type="button"
-                class="popup__close-icon"
-            ></button>
-            <form
-                novalidate
-                autocomplete="on"
-                action="#"
-                class="popup__form"
-                name="changeAvatarForm"
-                id="changeAvatarForm"
-            >
-                <h3 class="popup__title">Обновить аватар</h3>
-                <input
-                    minlength="4"
-                    required
-                    placeholder="Введите ссылку на фото"
-                    id="linkAvatarFoto"
-                    name="linkAvatarFoto"
-                    value=""
-                    type="url"
-                    class="popup__field"
-                />
-                <span
-                    class="popup__input-error"
-                    id="linkAvatarFoto-error"
-                ></span>
-                <button
-                    id="saveAvatarButton"
-                    aria-label="Сохранить"
-                    value="Сохранить"
-                    type="submit"
-                    class="popup__submit-button"
-                >
-                    Сохранить
-                </button>
-            </form>
-        </div>
-
-        <template id="newCardTemplate">
-            <article class="card">
-                <div class="card__rectangle">
-                    <button
-                        aria-label="кнопка удаления карточки"
-                        type="button"
-                        class="card__delete-button"
-                        id="deleteButton"
-                    ></button>
-                    <img class="card__foto" src="#" alt="" />
-                    <div class="card__name-like">
-                        <h2 class="card__title"></h2>
-                        <div class="card__like-zone">
-                            <button
-                                aria-label="Лайк"
-                                type="button"
-                                class="card__button-like"
-                            ></button>
-                            <p
-                                name="numberOfLikes"
-                                id="numberOfLikes"
-                                class="card__number-of-likes"
-                            ></p>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        </template>
-    </body>
+      </article>
+    </template>
+  </body>
 </html>
