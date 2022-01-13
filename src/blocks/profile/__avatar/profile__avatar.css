@@ -14,6 +14,9 @@
     justify-content: center;
     z-index: 0;
     filter: brightness(100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 @media screen and (max-width: 918px) and (min-width: 320px) {
