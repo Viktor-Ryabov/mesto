@@ -1,12 +1,12 @@
 import "../index.html";
 import "../pages/index.css";
 
-import { mestoAPIConfig } from "../scripts/utils/constants.js";
 import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
 import UserInfo from "../scripts/components/UserInfo.js";
 
 import {
+  mestoAPIConfig,
   editMestoPopup,
   buttonAddCard,
   editProfilePopup,
@@ -20,36 +20,34 @@ import {
 } from "../scripts/utils/constants.js";
 
 const apiRyabov = new Api(mestoAPIConfig);
-console.log(apiRyabov);
+// console.log(apiRyabov);
 
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-console.log(initialData);
+// console.log(initialData);
 
+//Main variables
+let userId, UserAvatar, userDescription;
 
-//** Попапы с формой
-//* new card
-const addNewCardPopup = new PopupWithForm(editMestoPopup);
-addNewCardPopup.setEventListeners();
-
-buttonAddCard.addEventListener("click", () => {
-  addNewCardPopup.openPopup();
-});
-
-//* Profile
-profileButton.addEventListener("click", () => {
-  changeProfileNamePopup.openPopup();
-});
+Promise.all(initialData)
+  .then (([userData, cardsData]) => {
+    userId = userData._id;
+    userInfo.setUserInfo(userData);
+    userInfo.setUserAvatar(userData);
+  })
+  .catch((error) => console.log(error))
+  .finally(() => {
+  });
 
 // Редактирования профиля
 const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
 
-const changeProfileNamePopup = new PopupWithForm(avatarPopup, {
-  formSubmitCallBack: (data, button) => {
+const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
+  formSubmitCallBack: (data) => {
     apiRyabov
       .sendProfileDataToServer(data)
       .then((res) => {
         userInfo.setUserInfo(res);
-        changeProfileNamePopup.close();
+        changeProfileNamePopup.closePopup();
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -58,6 +56,6 @@ const changeProfileNamePopup = new PopupWithForm(avatarPopup, {
 });
 changeProfileNamePopup.setEventListeners();
 
-changeAvatarButton.addEventListener("click", () => {
+profileButton.addEventListener("click", () => {
   changeProfileNamePopup.openPopup();
 })

@@ -77,13 +77,13 @@ export class Api {
   };
 
   //put another name to server
-  sendProfileDataToServer(description, Avtor) {
+  sendProfileDataToServer(data) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
-        about: `${description}`,
-        name: `${Avtor}`,
+        name: data.nameEditForm,
+        about: data.descriptionEditForm,
       }),
     }).then((res) => this._requestResult(res));
   }
