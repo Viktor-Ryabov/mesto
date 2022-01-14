@@ -41,9 +41,8 @@ Promise.all(initialData)
 
 // Редактирование профиля
 const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
-
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
-  formSubmitCallBack: (data) => {
+  formSubmitCallBack(data){
     apiRyabov
       .sendProfileDataToServer(data)
       .then((res) => {
@@ -63,7 +62,7 @@ profileButton.addEventListener("click", () => {
 
 //Редактирование аватара
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
-  formSubmitCallBack: (data) => {
+  formSubmitCallBack(data){
     console.log(data)
     apiRyabov
     .changeAvatarAPI(data.linkAvatarFoto)

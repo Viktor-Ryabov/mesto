@@ -6,6 +6,7 @@
     border-radius: 50%;
     justify-self: center;
     align-self: center;
+    border: 1px solid #000000;
     /* background-image: url("../../../img/me4.jpg"); */
     background-size: 100%;
     alt: "аватар";

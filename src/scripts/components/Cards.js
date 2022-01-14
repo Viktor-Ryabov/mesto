@@ -1,77 +1,65 @@
-import { openPopup } from "./Popup.js";
-import { addLike, deleteLike, setConfirmToDelete } from "../pages/index.js";
+export class Card {
+  //принимает в конструктор её данные и селектор её template-элемента;
+  constructor(
+    data,
+    user,
+    template,
+    imagePopup,
+    deleteCardHandler,
+    addLikeCardHandler,
+    deleteLikeCardHandler
+  ) {
+    this._data = data;
+    this._user = user;
+    this._cardId = data._id;
+    this._cardOwnerId = data.owner._id;
+    this._template = template;
+    this._imagePopup = imagePopup;
+    this._cardElement = this._getTamplate();
+    this._imagePopupButton = this._cardBaseElement.querySelector(".elements__picture"),
+    this._deleteCardHandler = deleteCardHandler;
+    this._likeCardHandler = likeCardHandler;
+    this._likeCounter = this._cardBaseElement.querySelector(".elements__like-counter");
+    this._addLikeCardHandler = addLikeCardHandler;
+    this._deleteLikeCardHandler = deleteLikeCardHandler;
+  }
 
-const imagePopup = document.querySelector("#image-popup");
-const cardPlacesSection = document.querySelector(".places");
-const deleteCardsPopup = document.querySelector("#deleteCardsPopup");
+  //**содержит приватные методы, которые работают с разметкой, устанавливают слушателей событий;
+  //*клонируем шаблон карточки
+  _getTamplate(){
+    const card = document
+    .querySelector(this._template)
+    .cloneNode(true)
+    .querySelector(".card");
+    return card;
+  }
 
-const popupBigFoto = document.querySelector(".popup__foto");
-const popupBigFotoText = document.querySelector(".popup__discription");
+  //* удаляем элемент
+  _deleteCard(){
+    this._cardElement.remove();
+  }
 
-// const createCard = (user, data) => {
-//     const template = document.querySelector("#newCardTemplate").content;
-//     const card = template.cloneNode(true).querySelector(".card");
-//     const numberOfLikes = card.querySelector("#numberOfLikes");
-//     const deleteButton = card.querySelector(".card__delete-button");
-//     const cardButtonLike = card.querySelector(".card__button-like");
+  //* добавляем лайк
+  //* удаляем лайк
+  //* считаем количество лайков
+  //* проеряем кто создатель карточки
+  //* проверяем есть ли лайк от личного аккаунта
+  //* устанавливаем слушатели
+  //* удаляем значок корзинки 
 
-//     card.querySelector(".card__title").textContent = data.name;
-//     card.querySelector("img").src = data.link;
-//     card.querySelector("img").alt = data.name;
-//     numberOfLikes.textContent = data.likes.length;
 
-//     setBigFotoHandler(card.querySelector(".card__foto"), imagePopup);
 
-//     //слушатель лайка
-//     cardButtonLike.addEventListener("click", function (event) {
-//         event.preventDefault();
-//         if (!cardButtonLike.classList.contains("card__button-like_active")) {
-//             addLike(data._id, cardButtonLike, numberOfLikes);
-//         } else {
-//             deleteLike(data._id, cardButtonLike, numberOfLikes);
-//         }
-//     });
-
-//     if (data.owner._id != user._id) {
-//         deleteButton.remove();
-//     } else {
-//         deleteButton.addEventListener("click", (event) => {
-//             event.preventDefault();
-//             const idCardToDelete = data._id;
-//             setConfirmToDelete(idCardToDelete, card);
-//         });
-//     }
-
-//     //я не перебираю все лайки всех карточек
-//     const dataLikes = data.likes;
-//     //перебираю только лайки карточки которую создаю
-//     dataLikes.forEach((like) => {
-//         //каждый лайк сравниваю с ид.юзера
-//         if (like._id == user._id) {
-//             card.querySelector(".card__button-like").classList.add(
-//                 "card__button-like_active"
-//             );
-//         }
-//     });
-//     return card;
-// };
-
-// const setBigFotoHandler = (button, popup) => {
-//     button.addEventListener("click", function (event) {
-//         event.preventDefault();
-//         setBigFotoData(button);
-//         openPopup(popup);
-//     });
-// };
-
-// const setBigFotoData = (button) => {
-//     popupBigFoto.src = button.src;
-//     popupBigFoto.alt = button.alt;
-//     popupBigFotoText.textContent = button.alt;
-// };
-
-// const addCard = (card) => {
-//     cardPlacesSection.prepend(card);
-// };
-
-// export { deleteCardsPopup, createCard, addCard, imagePopup };
+//содержит один публичный метод, который возвращает полностью работоспособный и наполненный данными элемент карточки.
+  createCard(){
+  //* клонировать элемент
+  //* назначить картинку
+  //* назначить описание
+  //* назначтить кнопку лайк
+  //* назначить кнопку удаления
+  //* назначить счётчик
+  //* поставить данные для счётчика
+  //* слушатель лайка
+  //* слушатель удаления
+  //* слушатель открытия попапа
+  }
+}
