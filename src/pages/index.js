@@ -3,7 +3,10 @@ import "../pages/index.css";
 
 import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
+import { Card } from "../scripts/components/Cards.js";
 import UserInfo from "../scripts/components/UserInfo.js";
+
+
 
 import {
   mestoAPIConfig,
@@ -15,7 +18,7 @@ import {
   changeAvatarButton,
   profileName,
   profileDescription,
-  profileAvatar
+  profileAvatar,
 
 } from "../scripts/utils/constants.js";
 
@@ -23,15 +26,19 @@ const apiRyabov = new Api(mestoAPIConfig);
 console.log(apiRyabov);
 
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-// console.log(initialData);
+console.log(initialData);
 
 //Main variables
 let userId, UserAvatar, userDescription;
 
 //Начальная загрузка данных
 Promise.all(initialData)
-  .then (([userData, cardsData]) => {
+  .then (([userData, cardsData]) => {   
+    const initialCardsData = cardsData;
     userId = userData._id;
+    console.log(userId);
+    console.log(initialCardsData);
+    console.log(Card.createCard(initialCardsData))
     userInfo.setUserInfo(userData);
     userInfo.setUserAvatar(userData);
   })
