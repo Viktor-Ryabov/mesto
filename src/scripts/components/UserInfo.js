@@ -11,6 +11,7 @@ export default class UserInfo {
     const userInfo = {
       name: this._name.textContent,
       description: this._description.textContent,
+      id: this._profileId
     };
     return userInfo;
   }

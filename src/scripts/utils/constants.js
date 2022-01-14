@@ -18,3 +18,6 @@ export const changeAvatarButton = document.querySelector("#avatarButton");
 export const profileName = document.querySelector("#nameProfile");
 export const profileDescription = document.querySelector("#descriptionProfile");
 export const profileAvatar = document.querySelector("#avatarButton");
+
+export const cardsContainer = document.querySelector(".places");
+export const template = document.querySelector(".card")
