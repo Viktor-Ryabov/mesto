@@ -3,7 +3,7 @@ import "../pages/index.css";
 
 import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
-import Card from "../scripts/components/Cards.js";
+import { Card } from "../scripts/components/Cards.js";
 import UserInfo from "../scripts/components/UserInfo.js";
 import { Section } from "../scripts/components/Section";
 import {

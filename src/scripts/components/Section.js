@@ -11,7 +11,7 @@ export class Section {
     //* Добавление карточки
     addItem(cardsData) {
         cardsData.forEach((dataObj) => {
-            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, this.userId);
+            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, this.userId, this.userId);
             const cardElement = card.cardGenerator();
             cardsContainer.append(cardElement);
         });
