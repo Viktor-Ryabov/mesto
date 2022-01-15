@@ -21,3 +21,5 @@ export const profileAvatar = document.querySelector("#avatarButton");
 
 export const cardsContainer = document.querySelector(".places");
 export const template = document.querySelector("#newCardTemplate");
+
+export const imagePopup = document.querySelector("#image-popup")

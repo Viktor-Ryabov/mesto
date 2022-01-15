@@ -17,11 +17,12 @@ import {
     profileName,
     profileDescription,
     profileAvatar,
-    template,
+    imagePopup
 } from "../scripts/utils/constants.js";
+import { PopupWithImage } from "../scripts/components/PopupWithImage";
 
 const apiRyabov = new Api(mestoAPIConfig);
-
+const bigImages = new PopupWithImage(imagePopup)
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
 const initialCards = new Section(initialData[0]._id, initialData[1]);
 //Main variables
@@ -30,7 +31,7 @@ let UserAvatar, userDescription;
 //Начальная загрузка данных
 Promise.all(initialData)
     .then(([userData, cardsData]) => {
-        initialCards.addItem(cardsData, userData, apiRyabov);
+        initialCards.addItem(cardsData, userData, apiRyabov, bigImages);
         userInfo.setUserInfo(userData);
         userInfo.setUserAvatar(userData);
     })
@@ -73,7 +74,6 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
     },
 });
 changeAvatarImage.setEventListeners();
-
 changeAvatarButton.addEventListener("click", () => {
     changeAvatarImage.openPopup();
 });

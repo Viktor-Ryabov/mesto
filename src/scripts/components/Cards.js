@@ -1,5 +1,7 @@
+import { PopupWithImage } from "./PopupWithImage";
+
 export default class Card {
-    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userId, apiRyabov) {
+    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userId, apiRyabov, bigImages) {
         this._cardTitle = cardTitle;
         this._cardImage = cardImage;
         this._userId = userId;
@@ -7,6 +9,7 @@ export default class Card {
         this._likesArray = cardLikes;
         this._cardId = cardId;
         this._cardsApi = apiRyabov;
+        this._cardBigImage = bigImages;
     }
 
     cardGenerator() {
@@ -35,7 +38,7 @@ export default class Card {
             this._likeHandler();
         });
         this._element.querySelector(".card__foto").addEventListener("click", () => {
-            console.log("BIG_IMAGE!!!");
+            this._cardBigImage.renderBigImages(this._cardImage, this._cardTitle);
         });
         this._element.querySelector("#deleteButton").addEventListener("click", () => {
             this._deleteCard();
@@ -77,7 +80,6 @@ export default class Card {
     _checkInitialLikes() {
         if (this._likesArray) {
             this._element.querySelector(".card__number-of-likes").textContent = this._likesArray.length;
-            console.log(this._likesArray.length);
             this._likesArray.forEach((user) => {
                 if (user._id === this._cardOwnerId) {
                     this._element.querySelector(".card__button-like").classList.add("card__button-like_active");
