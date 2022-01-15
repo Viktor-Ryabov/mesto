@@ -3,9 +3,9 @@ import "../pages/index.css";
 
 import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
-import { Card } from "../scripts/components/Cards.js";
+import Card from "../scripts/components/Cards.js";
 import UserInfo from "../scripts/components/UserInfo.js";
-
+import { Section } from "../scripts/components/Section";
 import {
     mestoAPIConfig,
     editMestoPopup,
@@ -23,20 +23,16 @@ import {
 const apiRyabov = new Api(mestoAPIConfig);
 
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-
+const initialCards = new Section(initialData[0]._id, initialData[1]);
 //Main variables
 let UserAvatar, userDescription;
-
-const loadCards = new Card(initialData[1], initialData[0]);
 
 //Начальная загрузка данных
 Promise.all(initialData)
     .then(([userData, cardsData]) => {
-        const loadCards = new Card(cardsData, userData._id);
+        initialCards.addItem(cardsData);
         userInfo.setUserInfo(userData);
         userInfo.setUserAvatar(userData);
-
-        loadCards.renderCards(cardsData);
     })
     .catch((error) => console.log(error))
     .finally(() => {});
