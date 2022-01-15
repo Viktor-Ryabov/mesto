@@ -5,8 +5,4 @@ export class PopupWithImage extends Popup {
         this._cardImage = cardImage;
         this._cardTitle = cardTitle;
     }
-
-    renderImageInPopup() {
-        this._cardImage
-    }
 }

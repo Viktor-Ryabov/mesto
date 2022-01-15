@@ -30,7 +30,7 @@ let UserAvatar, userDescription;
 //Начальная загрузка данных
 Promise.all(initialData)
     .then(([userData, cardsData]) => {
-        initialCards.addItem(cardsData);
+        initialCards.addItem(cardsData, userData, apiRyabov);
         userInfo.setUserInfo(userData);
         userInfo.setUserAvatar(userData);
     })

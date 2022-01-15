@@ -3,15 +3,15 @@ import { cardsContainer } from "../utils/constants";
 
 //* Класс размещения карточек на странице
 export class Section {
-    constructor(cardsData, userId) {
+    constructor(userId, cardsData) {
         this.cardsData = cardsData;
-        this.userId = userId;
+        this._userId = userId;
     }
 
     //* Добавление карточки
-    addItem(cardsData) {
+    addItem(cardsData, userId, apiRyabov) {
         cardsData.forEach((dataObj) => {
-            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, this.userId, this.userId);
+            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userId, apiRyabov);
             const cardElement = card.cardGenerator();
             cardsContainer.append(cardElement);
         });
