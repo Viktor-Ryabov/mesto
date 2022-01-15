@@ -5,6 +5,9 @@ import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
 import { Card } from "../scripts/components/Cards.js";
 import UserInfo from "../scripts/components/UserInfo.js";
+
+import { Section } from "../scripts/components/Section";
+
 import { FormValidator } from "../scripts/components/FormValidator.js"
 
 import {
@@ -18,30 +21,29 @@ import {
   profileName,
   profileDescription,
   profileAvatar,
-  template,
+  imagePopup,
   validationConfig,
 } from "../scripts/utils/constants.js";
+import { PopupWithImage } from "../scripts/components/PopupWithImage";
 
 const apiRyabov = new Api(mestoAPIConfig);
-
+const bigImages = new PopupWithImage(imagePopup);
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-
+const initialCards = new Section(initialData[0]._id, initialData[1]);
 //Main variables
 let UserAvatar, userDescription;
 
-const loadCards = new Card(initialData[1], initialData[0]);
-
 //Начальная загрузка данных
 Promise.all(initialData)
-  .then(([userData, cardsData]) => {
-    const loadCards = new Card(cardsData, userData._id);
-    userInfo.setUserInfo(userData);
-    userInfo.setUserAvatar(userData);
 
-    loadCards.renderCards(cardsData);
-  })
-  .catch((error) => console.log(error))
-  .finally(() => {});
+    .then(([userData, cardsData]) => {
+        initialCards.addItem(cardsData, userData, apiRyabov, bigImages);
+        userInfo.setUserInfo(userData);
+        userInfo.setUserAvatar(userData);
+    })
+    .catch((error) => console.log(error))
+    .finally(() => {});
+
 
 // Редактирование профиля
 const userInfo = new UserInfo({
@@ -81,6 +83,7 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
   },
 });
 changeAvatarImage.setEventListeners();
+
 
 //// Классы валидации форм
 //валидация профайла
