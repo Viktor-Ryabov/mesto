@@ -88,6 +88,8 @@ const validatorEditProfilePopup = new FormValidator(
   validationConfig,
   editProfilePopup,
 );
+
+console.log(validatorEditProfilePopup);
 //валидация аватара
 const validatorAvatarPopup = new FormValidator(
   validationConfig,
@@ -108,11 +110,9 @@ validatorNewCardPopup.enableValidation();
 // кнопка аватара
 changeAvatarButton.addEventListener("click", () => {
   changeAvatarImage.openPopup();
-  validatorAvatarPopup.hideAllErrors();
 });
 // кнопка профайла
 profileButton.addEventListener("click", () => {
   changeProfileNamePopup.openPopup();
-  validatorEditProfilePopup.hideAllErrors();
 });
 // кнопка новой карточки

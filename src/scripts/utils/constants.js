@@ -10,7 +10,6 @@ export const validationConfig = {
   formSelector: ".popup__form",
   inputField: ".popup__field",
   submitButtonSelector: ".popup__submit-button",
-  // inputErrorClass: "popup__input_type_error",
   inputError: ".popup__input-error",
   errorClass: "popup__input-error_visible",
 
