@@ -38,16 +38,55 @@
             <p class="footer__copyright">&copy; Mesto Russia</p>
         </footer>
 
-        <div class="popup" id="editFormProfile">
-            <button id="closeProfile" name="closeProfile" aria-label="Закрыть" type="button" class="popup__close-icon"></button>
-            <form novalidate autocomplete="on" action="#" class="popup__form" name="editForm" id="editForm" method="POST">
-                <h3 class="popup__title">Редактировать профиль</h3>
-                <input minlength="3" required name="nameEditForm" id="nameEditForm" placeholder="Виктор Рябов" type="text" class="popup__field" />
-                <span class="popup__input-error" id="nameEditForm-error"></span>
-                <input required minlength="3" id="descriptionEditForm" name="descriptionEditForm" placeholder="Неустанный путешественник" value="" type="text" class="popup__field" />
-                <span class="popup__input-error" id="descriptionEditForm-error"></span>
-                <button id="saveData" aria-label="Сохранить" value="Сохранить" type="submit" class="popup__submit-button">Сохранить</button>
-                <!-- <button
+    <div class="popup" id="editFormProfile">
+      <button
+        id="closeProfile"
+        name="closeProfile"
+        aria-label="Закрыть"
+        type="button"
+        class="popup__close-icon"
+      ></button>
+      <form
+        novalidate
+        autocomplete="on"
+        action="#"
+        class="popup__form"
+        name="editForm"
+        id="editForm"
+        method="POST"
+      >
+        <h3 class="popup__title">Редактировать профиль</h3>
+        <input
+          minlength="3"
+          required
+          name="nameEditForm"
+          id="nameEditForm"
+          placeholder="Виктор Рябов"
+          type="text"
+          class="popup__field"
+        />
+        <span class="popup__input-error" name = "nameEditForm"  id="nameEditForm-error"></span>
+        <input
+          required
+          minlength="3"
+          id="descriptionEditForm"
+          name="descriptionEditForm"
+          placeholder="Неустанный путешественник"
+          value=""
+          type="text"
+          class="popup__field"
+        />
+        <span class="popup__input-error" name = "descriptionEditForm" id="descriptionEditForm-error"></span>
+        <button
+          id="saveData"
+          aria-label="Сохранить"
+          value="Сохранить"
+          type="submit"
+          class="popup__submit-button"
+        >
+          Сохранить
+        </button>
+        <!-- <button
                     id="popupCloseProfile"
                     aria-label="Закрыть"
                     type="button"
