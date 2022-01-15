@@ -17,12 +17,12 @@ import {
     profileName,
     profileDescription,
     profileAvatar,
-    imagePopup
+    imagePopup,
 } from "../scripts/utils/constants.js";
 import { PopupWithImage } from "../scripts/components/PopupWithImage";
 
 const apiRyabov = new Api(mestoAPIConfig);
-const bigImages = new PopupWithImage(imagePopup)
+const bigImages = new PopupWithImage(imagePopup);
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
 const initialCards = new Section(initialData[0]._id, initialData[1]);
 //Main variables
