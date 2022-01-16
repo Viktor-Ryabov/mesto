@@ -1,10 +1,8 @@
-import { PopupWithImage } from "./PopupWithImage";
-
 export default class Card {
     constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userId, apiRyabov, bigImages) {
         this._cardTitle = cardTitle;
         this._cardImage = cardImage;
-        this._userId = userId;
+        this._userId = userId._id;
         this._cardOwnerId = cardOwnerId;
         this._likesArray = cardLikes;
         this._cardId = cardId;
@@ -46,7 +44,7 @@ export default class Card {
     }
 
     _deleteCardHandlerDeactivate() {
-        if (this._cardOwner !== this._userId) {
+        if (this._cardOwnerId !== this._userId) {
             this._element.querySelector("#deleteButton").remove(); //удаляем прям элемент корзинки
         }
     }
@@ -58,7 +56,8 @@ export default class Card {
             this._cardsApi
                 .putLikesAPI(this._cardId)
                 .then((res) => {
-                    likeCount.textContent = res.likes.length;
+                    const numOfLikes = res.likes.length;
+                    likeCount.textContent = numOfLikes;
                     likeHeart.classList.add("card__button-like_active");
                 })
                 .catch((err) => {
@@ -68,7 +67,8 @@ export default class Card {
             this._cardsApi
                 .deleteLikesAPI(this._cardId)
                 .then((res) => {
-                    likeCount.textContent = res.likes.length;
+                    const numOfLikes = res.likes.length;
+                    likeCount.textContent = numOfLikes;
                     likeHeart.classList.remove("card__button-like_active");
                 })
                 .catch((err) => {
@@ -78,11 +78,13 @@ export default class Card {
     }
 
     _checkInitialLikes() {
-        if (this._likesArray) {
-            this._element.querySelector(".card__number-of-likes").textContent = this._likesArray.length;
+        const likeHeart = this._element.querySelector(".card__button-like");
+        const likeCount = this._element.querySelector(".card__number-of-likes");
+        if (this._likesArray !== 0) {
+            likeCount.textContent = this._likesArray.length;
             this._likesArray.forEach((user) => {
-                if (user._id === this._cardOwnerId) {
-                    this._element.querySelector(".card__button-like").classList.add("card__button-like_active");
+                if (user._id === this._userId) {
+                    likeHeart.classList.add("card__button-like_active");
                 }
             });
         } else {
