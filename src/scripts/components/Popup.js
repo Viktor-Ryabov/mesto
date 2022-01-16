@@ -25,7 +25,6 @@ export class Popup {
 
     _closeByOverlayClick(event) {
         if (event.type === "click") {
-            console.log(event.type);
             if (event.target === event.currentTarget) {
                 this.closePopup();
             }
