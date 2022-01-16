@@ -18,10 +18,10 @@ export class FormValidator {
   _toggleButtonState() {
     if (this._isFormNotValid()) {
       this._button.disabled = true;
-      console.log("form not valid");
+//      console.log("form not valid");
     } else {
       this._button.disabled = false;
-      console.log("form valid");
+//      console.log("form valid");
     }
   }
 

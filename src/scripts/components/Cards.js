@@ -1,8 +1,8 @@
 export default class Card {
-    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userId, apiRyabov, bigImages) {
+    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userData, apiRyabov, bigImages) {
         this._cardTitle = cardTitle;
         this._cardImage = cardImage;
-        this._userId = userId._id;
+        this._userId = userData._id;
         this._cardOwnerId = cardOwnerId;
         this._likesArray = cardLikes;
         this._cardId = cardId;
@@ -45,7 +45,8 @@ export default class Card {
 
     _deleteCardHandlerDeactivate() {
         if (this._cardOwnerId !== this._userId) {
-            this._element.querySelector("#deleteButton").remove(); //удаляем прям элемент корзинки
+            const bucket = this._element.querySelector("#deleteButton");
+            bucket.remove(); //удаляем прям элемент корзинки
         }
     }
 

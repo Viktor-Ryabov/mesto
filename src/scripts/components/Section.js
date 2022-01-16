@@ -9,11 +9,11 @@ export class Section {
     }
 
     //* Добавление карточки
-    addItem(cardsData, userId, apiRyabov, bigImages) {
-        cardsData.forEach((dataObj) => {
-            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userId, apiRyabov, bigImages);
+    addItem(cardsData, userData, apiRyabov, bigImages) {
+        cardsData.reverse().forEach((dataObj) => {
+            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userData, apiRyabov, bigImages);
             const cardElement = card.cardGenerator();
-            cardsContainer.append(cardElement);
+            cardsContainer.prepend(cardElement);
         });
     }
 }
