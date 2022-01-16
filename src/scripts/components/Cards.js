@@ -1,5 +1,3 @@
-import { PopupWithImage } from "./PopupWithImage";
-
 export default class Card {
     constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userId, apiRyabov, bigImages) {
         this._cardTitle = cardTitle;
