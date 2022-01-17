@@ -23,21 +23,27 @@ import {
     profileAvatar,
     imagePopup,
     validationConfig,
+    cardTemplate,
+    deleteCardsPopup,
 } from "../scripts/utils/constants.js";
+
 import { PopupWithImage } from "../scripts/components/PopupWithImage";
+import { Popup } from "../scripts/components/Popup";
 
 const apiRyabov = new Api(mestoAPIConfig);
 const bigImages = new PopupWithImage(imagePopup);
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-const initialCards = new Section(initialData[0]._id, initialData[1]);
+const initialCards = new Section(initialData[0]._id, initialData[1], cardTemplate);
+const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, '');
+
 //Main variables
-let currentUserData, UserAvatar, userDescription;
+let currentUserData = '';
 
 //Начальная загрузка данных
 Promise.all(initialData)
 
     .then(([userData, cardsData]) => {
-        initialCards.addItem(cardsData, userData, apiRyabov, bigImages);
+        initialCards.addItem(cardsData, userData, apiRyabov, bigImages, popupDeleteConfirming);
         currentUserData = userData;
         userInfo.setUserInfo(userData);
         userInfo.setUserAvatar(userData);
