@@ -70,11 +70,7 @@ const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
 });
 changeProfileNamePopup.setEventListeners();
 
-profileButton.addEventListener("click", () => {
-  userInfo.setPopupFieldsData();
-  validatorEditProfilePopup.disableSubmitButton();
-  changeProfileNamePopup.openPopup();
-});
+
 
 //Редактирование аватара
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
@@ -114,10 +110,7 @@ const addNewCardToPage = new PopupWithForm(editMestoPopup, {
 });
 addNewCardToPage.setEventListeners();
 
-buttonAddCard.addEventListener("click", () => {
-  validatorNewCardPopup.disableSubmitButton();
-  addNewCardToPage.openPopup();
-});
+
 
 //// Классы валидации форм
 //валидация профайла
@@ -139,8 +132,18 @@ validatorAvatarPopup.enableValidation();
 validatorNewCardPopup.enableValidation();
 
 //// Слушатели
-// кнопка аватара
 changeAvatarButton.addEventListener("click", () => {
-  validatorAvatarPopup.disableSubmitButton();
+  validatorAvatarPopup.resetValidation();
   changeAvatarImage.openPopup();
+});
+
+buttonAddCard.addEventListener("click", () => {
+  validatorNewCardPopup.resetValidation();
+  addNewCardToPage.openPopup();
+});
+
+profileButton.addEventListener("click", () => {
+  userInfo.setPopupFieldsData();
+  validatorEditProfilePopup.resetValidation()
+  changeProfileNamePopup.openPopup();
 });
