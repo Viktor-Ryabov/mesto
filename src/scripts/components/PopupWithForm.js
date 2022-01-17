@@ -36,13 +36,7 @@ export class PopupWithForm extends Popup {
   closePopup() {
     super.closePopup();
     this._form.reset();
-    console.log("reseted");
   }
-
-  // setPopupFieldsData(name, about) {
-  //   this._form.querySelector("#nameEditForm").value = name;
-  //   this._form.querySelector("#descriptionEditForm").value = about;
-  // }
 
   // Установка слушателей
   setEventListeners() {

@@ -11,7 +11,7 @@ export class FormValidator {
   }
 
   //Выключение кнопки сабмита
-  _disableSubmitButton() {
+  disableSubmitButton() {
     this._buttonRR.disabled = true;
   }
 
