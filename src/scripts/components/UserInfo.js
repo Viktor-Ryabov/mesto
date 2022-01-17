@@ -2,7 +2,6 @@
 export default class UserInfo {
   constructor({ profileName, profileDescription, profileId, profileAvatar }) {
     this._name = profileName;
-    console.log(this._name);
     this._description = profileDescription;
     this._profileId = profileId;
     this._profileAvatar = profileAvatar;

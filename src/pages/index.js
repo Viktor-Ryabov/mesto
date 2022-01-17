@@ -79,7 +79,6 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
     apiRyabov
       .changeAvatarAPI(data.linkAvatarFoto)
       .then((res) => {
-        console.log(res);
         userInfo.setUserInfo(res);
         changeAvatarImage.closePopup();
       })
@@ -91,14 +90,12 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
 });
 changeAvatarImage.setEventListeners();
 
-//////_______________
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
   formSubmitCallBack(data) {
     addNewCardToPage.changeButtonOnLoad(true);
     apiRyabov
       .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
       .then((cardData) => {
-        console.log(cardData.owner._id);
         initialCards.addItem([cardData], currentUserData, apiRyabov, bigImages);
         addNewCardToPage.closePopup();
       })
@@ -110,15 +107,12 @@ const addNewCardToPage = new PopupWithForm(editMestoPopup, {
 });
 addNewCardToPage.setEventListeners();
 
-
-
 //// Классы валидации форм
 //валидация профайла
 const validatorEditProfilePopup = new FormValidator(
   validationConfig,
   editProfilePopup
 );
-
 //валидация аватара
 const validatorAvatarPopup = new FormValidator(validationConfig, avatarPopup);
 //валидация новых карточек
