@@ -1,77 +1,95 @@
-import { openPopup } from "./Popup.js";
-import { addLike, deleteLike, setConfirmToDelete } from "../pages/index.js";
+export default class Card {
+    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userData, apiRyabov, bigImages) {
+        this._cardTitle = cardTitle;
+        this._cardImage = cardImage;
+        this._userId = userData._id;
+        this._cardOwnerId = cardOwnerId;
+        this._likesArray = cardLikes;
+        this._cardId = cardId;
+        this._cardsApi = apiRyabov;
+        this._cardBigImage = bigImages;
+    }
 
-const imagePopup = document.querySelector("#image-popup");
-const cardPlacesSection = document.querySelector(".places");
-const deleteCardsPopup = document.querySelector("#deleteCardsPopup");
+    cardGenerator() {
+        this._element = this._getTemplate();
+        this._element.querySelector(".card__foto").src = `${this._cardImage}`;
+        this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
+        this._setEventListeners();
+        this._deleteCardHandlerDeactivate();
+        this._checkInitialLikes();
 
-const popupBigFoto = document.querySelector(".popup__foto");
-const popupBigFotoText = document.querySelector(".popup__discription");
+        return this._element;
+    }
 
-// const createCard = (user, data) => {
-//     const template = document.querySelector("#newCardTemplate").content;
-//     const card = template.cloneNode(true).querySelector(".card");
-//     const numberOfLikes = card.querySelector("#numberOfLikes");
-//     const deleteButton = card.querySelector(".card__delete-button");
-//     const cardButtonLike = card.querySelector(".card__button-like");
+    _getTemplate() {
+        const cardElement = document.querySelector("#newCardTemplate").content.querySelector(".card").cloneNode(true);
+        return cardElement;
+    }
 
-//     card.querySelector(".card__title").textContent = data.name;
-//     card.querySelector("img").src = data.link;
-//     card.querySelector("img").alt = data.name;
-//     numberOfLikes.textContent = data.likes.length;
+    _deleteCard() {
+        this._element.remove();
+        this._cardsApi.deleteCardsAPI(this._cardId);
+    }
 
-//     setBigFotoHandler(card.querySelector(".card__foto"), imagePopup);
+    _setEventListeners() {
+        this._element.querySelector(".card__button-like").addEventListener("click", () => {
+            this._likeHandler();
+        });
+        this._element.querySelector(".card__foto").addEventListener("click", () => {
+            this._cardBigImage.renderBigImages(this._cardImage, this._cardTitle);
+        });
+        this._element.querySelector("#deleteButton").addEventListener("click", () => {
+            this._deleteCard();
+        });
+    }
 
-//     //слушатель лайка
-//     cardButtonLike.addEventListener("click", function (event) {
-//         event.preventDefault();
-//         if (!cardButtonLike.classList.contains("card__button-like_active")) {
-//             addLike(data._id, cardButtonLike, numberOfLikes);
-//         } else {
-//             deleteLike(data._id, cardButtonLike, numberOfLikes);
-//         }
-//     });
+    _deleteCardHandlerDeactivate() {
+        if (this._cardOwnerId !== this._userId) {
+            const bucket = this._element.querySelector("#deleteButton");
+            bucket.remove(); //удаляем прям элемент корзинки
+        }
+    }
 
-//     if (data.owner._id != user._id) {
-//         deleteButton.remove();
-//     } else {
-//         deleteButton.addEventListener("click", (event) => {
-//             event.preventDefault();
-//             const idCardToDelete = data._id;
-//             setConfirmToDelete(idCardToDelete, card);
-//         });
-//     }
+    _likeHandler() {
+        const likeHeart = this._element.querySelector(".card__button-like");
+        const likeCount = this._element.querySelector(".card__number-of-likes");
+        if (!likeHeart.classList.contains("card__button-like_active")) {
+            this._cardsApi
+                .putLikesAPI(this._cardId)
+                .then((res) => {
+                    const numOfLikes = res.likes.length;
+                    likeCount.textContent = numOfLikes;
+                    likeHeart.classList.add("card__button-like_active");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            this._cardsApi
+                .deleteLikesAPI(this._cardId)
+                .then((res) => {
+                    const numOfLikes = res.likes.length;
+                    likeCount.textContent = numOfLikes;
+                    likeHeart.classList.remove("card__button-like_active");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }
 
-//     //я не перебираю все лайки всех карточек
-//     const dataLikes = data.likes;
-//     //перебираю только лайки карточки которую создаю
-//     dataLikes.forEach((like) => {
-//         //каждый лайк сравниваю с ид.юзера
-//         if (like._id == user._id) {
-//             card.querySelector(".card__button-like").classList.add(
-//                 "card__button-like_active"
-//             );
-//         }
-//     });
-//     return card;
-// };
-
-// const setBigFotoHandler = (button, popup) => {
-//     button.addEventListener("click", function (event) {
-//         event.preventDefault();
-//         setBigFotoData(button);
-//         openPopup(popup);
-//     });
-// };
-
-// const setBigFotoData = (button) => {
-//     popupBigFoto.src = button.src;
-//     popupBigFoto.alt = button.alt;
-//     popupBigFotoText.textContent = button.alt;
-// };
-
-// const addCard = (card) => {
-//     cardPlacesSection.prepend(card);
-// };
-
-// export { deleteCardsPopup, createCard, addCard, imagePopup };
+    _checkInitialLikes() {
+        const likeHeart = this._element.querySelector(".card__button-like");
+        const likeCount = this._element.querySelector(".card__number-of-likes");
+        if (this._likesArray !== 0) {
+            likeCount.textContent = this._likesArray.length;
+            this._likesArray.forEach((user) => {
+                if (user._id === this._userId) {
+                    likeHeart.classList.add("card__button-like_active");
+                }
+            });
+        } else {
+            this._element.querySelector(".card__number-of-likes").textContent = 0;
+        }
+    }
+}

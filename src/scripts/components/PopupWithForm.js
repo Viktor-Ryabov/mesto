@@ -1,47 +1,46 @@
 import { Popup } from "./Popup.js";
 
 export class PopupWithForm extends Popup {
-  constructor(popupElement, formCallBackSubmit){
-    super(popupElement);
-    this._formCallBackSubmit = formCallBackSubmit;
-    this._formSubmit = this._formSubmit.bind(this);
-    this.form = this._popupElement.querySelector(".popup__form");
-    this._inputs = Array.from(this._form.querySelectorAll(".popup__field"));
-    this.submitButton = this._form.querySelector(".popup__submit-button");
-}
-
-  changeProfileName() {
-    console.log("имя сейчас поменяется");
-    nameProfile.textContent = nameEditForm.value;
-    descriptionProfile.textContent = descriptionEditForm.value;
-  }
-
-  setPopupOpenHandler(popupWindow, button) {
-    button.addEventListener("click", function (event) {
-      event.preventDefault();
-      openPopup(popupWindow);
-    });
-  }
-
-  openPopup(popupWindow) {
-    popupWindow.classList.add("popup_opened");
-    document.addEventListener("keydown", closeByEscape);
-  }
-
-  closePopup(popupWindow) {
-    popupWindow.classList.remove("popup_opened");
-    document.removeEventListener("keydown", closeByEscape);
-  }
-
-  closeByEscape(event) {
-    if (event.key === "Escape") {
-      const openedPopup = document.querySelector(".popup_opened");
-      closePopup(openedPopup);
+    constructor(popupElement, { formSubmitCallBack }) {
+        super(popupElement);
+        this._formSubmitCallBack = formSubmitCallBack;
+        this._formSubmit = this._formSubmit.bind(this);
+        this._form = this._popupElement.querySelector(".popup__form");
+        this._inputs = Array.from(this._form.querySelectorAll(".popup__field"));
+        this._submitButton = this._form.querySelector(".popup__submit-button");
     }
-  }
 
-  resetForm(form, button) {
-    form.reset();
-    button.disabled = true;
-  }
+    // Сабмит
+    _formSubmit(event) {
+        event.preventDefault();
+        this._formSubmitCallBack(this._getInputValues(), this._submitButton);
+    }
+
+    // Сбор данных с полей формы
+    _getInputValues() {
+        const data = {};
+        this._inputs.forEach((input) => {
+            data[input.name] = input.value;
+        });
+        return data;
+    }
+
+    changeButtonOnLoad(isLoading) {
+        if (isLoading) {
+          this._submitButton.textContent = "Сохранение...";
+        } else {
+          this._submitButton.textContent = "Сохранить";
+        }
+    }
+
+    closePopup() {
+        super.closePopup();
+        this._form.reset();
+    }
+
+    // Установка слушателей
+    setEventListeners() {
+        super.setEventListeners();
+        this._form.addEventListener("submit", this._formSubmit);
+    }
 }

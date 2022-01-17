@@ -1,57 +1,82 @@
-export const turnOnValidation = (config) => {
-  const isFormValid = (inputList) =>
-    inputList.every((inputElement) => inputElement.validity.valid);
+export class FormValidator {
+  constructor(validationConfig, popupForm) {
+    this._form = popupForm;
+    this._formSelector = validationConfig.formSelector;
+    this._inputField = validationConfig.inputField;
+    this._submitButtonSelector = validationConfig.submitButtonSelector;
+    this._inputError = validationConfig.inputError;
+    this._inputs = Array.from(this._form.querySelectorAll(this._inputField));
+    this._errors = Array.from(this._form.querySelectorAll(this._inputError));
+    this._buttonRR = this._form.querySelector(this._submitButtonSelector);
+  }
 
-  const getErrorElement = (inputElement, formElement) =>
-    formElement.querySelector(`#${inputElement.name}-error`);
+  //Выключение кнопки сабмита
+  _disableSubmitButton() {
+    this._buttonRR.disabled = true;
+  }
 
-  const hideInputError = (inputElement, formElement) => {
-    const errorElement = getErrorElement(inputElement, formElement);
-    errorElement.textContent = "";
-  };
-
-  const showInputError = (inputElement, formElement) => {
-    const errorElement = getErrorElement(inputElement, formElement);
-    errorElement.textContent = inputElement.validationMessage;
-  };
-
-  const toggleButtonState = (submitButton, inputList) => {
-    if (isFormValid(inputList)) {
-      submitButton.disabled = false;
+  _toggleButtonState() {
+    if (this._isFormNotValid()) {
+      this._button.disabled = true;
+//      console.log("form not valid");
     } else {
-      submitButton.disabled = true;
+      this._button.disabled = false;
+//      console.log("form valid");
     }
-  };
+  }
 
-  const checkInputValidity = (inputElement, formElement) => {
-    if (inputElement.validity.valid) {
-      hideInputError(inputElement, formElement);
-    } else {
-      showInputError(inputElement, formElement);
-    }
-  };
-
-  const setEvenListeners = (formElement) => {
-    formElement.addEventListener("submit", (event) => {
-      event.preventDefault();
+  _isFormNotValid() {
+    return this._inputs.some((inputElement) => {
+      return !inputElement.validity.valid;
     });
+  }
 
-    const inputList = Array.from(
-      formElement.querySelectorAll(config.inputSelector)
-    );
+  // Проверка элемента формы на валидность
+  _isValid(field) {
+    this._field = field;
+    this._errorElement = this._form.querySelector(`#${this._field.id}-error`);
+    if (!this._field.validity.valid) {
+      this._showInputError();
+    } else {
+      this._hideInputError();
+    }
+  }
 
-    const submitButton = formElement.querySelector(config.buttonSelector);
+  //* Отображение сообщения об ошибке
+  _showInputError() {
+    this._errorElement.textContent = this._field.validationMessage;
+  }
 
-    inputList.forEach((inputElement) => {
-      inputElement.addEventListener("input", () => {
-        checkInputValidity(inputElement, formElement);
-        toggleButtonState(submitButton, inputList);
+  // Скрытие сообщения об ошибке
+  _hideInputError() {
+    this._errorElement.textContent = "";
+  }
+
+  //* Скрытие ошибок и очистка полей
+  hideAllErrors() {
+    this._errors.forEach((error) => {
+      error.textContent = "";
+    });
+  }
+
+  //* Установка слушателей
+  _setEventListeners() {
+    this._button = this._form.querySelector(this._submitButtonSelector);
+    // this._toggleButtonState();
+    this._inputs.forEach((element) => {
+      element.addEventListener("input", () => {
+        this._isValid(element);
+        this._toggleButtonState();
       });
     });
-    toggleButtonState(submitButton, inputList);
-  };
-  const formList = Array.from(document.querySelectorAll(config.formSelector));
-  formList.forEach((formElement) => {
-    setEvenListeners(formElement);
-  });
-};
+  }
+
+  //* Валидация форм
+  enableValidation() {
+    this._setEventListeners();
+    this._form.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+    this._toggleButtonState();
+  }
+}
