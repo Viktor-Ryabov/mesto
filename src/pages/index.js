@@ -27,6 +27,7 @@ import {
 import { PopupWithImage } from "../scripts/components/PopupWithImage";
 
 const apiRyabov = new Api(mestoAPIConfig);
+
 const bigImages = new PopupWithImage(imagePopup);
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
 const initialCards = new Section(initialData[0]._id, initialData[1]);
@@ -35,12 +36,13 @@ let currentUserData, UserAvatar, userDescription;
 
 //Начальная загрузка данных
 Promise.all(initialData)
-
     .then(([userData, cardsData]) => {
         initialCards.addItem(cardsData, userData, apiRyabov, bigImages);
         currentUserData = userData;
         userInfo.setUserInfo(userData);
         userInfo.setUserAvatar(userData);
+        userInfo.setPopupFieldsData(userData);
+        // console.log(userData);
     })
     .catch((error) => console.log(error))
     .finally(() => {});
@@ -51,9 +53,12 @@ const userInfo = new UserInfo({
     profileDescription,
     profileAvatar,
 });
+
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
     formSubmitCallBack(data) {
-        changeProfileNamePopup.changeButtonOnLoad(true);
+        changeProfileNamePopup.setPopupFieldsData(userData.name, userData.about);
+        console.log(data);
+        // changeProfileNamePopup.changeButtonOnLoad(true);
         apiRyabov
             .sendProfileDataToServer(data)
             .then((res) => {
@@ -67,6 +72,11 @@ const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
     },
 });
 changeProfileNamePopup.setEventListeners();
+
+profileButton.addEventListener("click", () => {
+    userInfo.setPopupFieldsData();
+    changeProfileNamePopup.openPopup();
+});
 
 //Редактирование аватара
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
@@ -129,7 +139,5 @@ changeAvatarButton.addEventListener("click", () => {
     changeAvatarImage.openPopup();
 });
 // кнопка профайла
-profileButton.addEventListener("click", () => {
-    changeProfileNamePopup.openPopup();
-});
+
 // кнопка новой карточки
