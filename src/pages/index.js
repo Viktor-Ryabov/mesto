@@ -64,7 +64,7 @@ bigFotoPopup.setEventListeners();
 
 //редактирование профайла
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
-  formSubmitCallBack(data) {
+  formSubmitCallBack(data){
     mainApiData
       .sendProfileDataToServer(data)
       .then((res) => {
