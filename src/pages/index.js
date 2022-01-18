@@ -10,23 +10,26 @@ import { FormValidator } from "../scripts/components/FormValidator.js";
 import {PopupWithImage} from "../scripts/components/PopupWithImage";
 
 import {
-  mestoAPIConfig,
-  editMestoPopup,
-  buttonAddCard,
-  editProfilePopup,
-  profileButton,
-  avatarPopup,
-  changeAvatarButton,
-  profileName,
-  profileDescription,
-  profileAvatar,
-  imagePopup,
-  validationConfig,
+    mestoAPIConfig,
+    editMestoPopup,
+    buttonAddCard,
+    editProfilePopup,
+    profileButton,
+    avatarPopup,
+    changeAvatarButton,
+    profileName,
+    profileDescription,
+    profileAvatar,
+    imagePopup,
+    validationConfig,
+    cardTemplate,
+    deleteCardsPopup,
 } from "../scripts/utils/constants.js";
 
 const mainApiData = new Api(mestoAPIConfig);
 
 const bigImages = new PopupWithImage(imagePopup);
+
 const initialData = [mainApiData.getUserInfo(), mainApiData.getCardsInfo()];
 
 //Main variables
@@ -45,11 +48,13 @@ Promise.all(initialData)
   .finally(() => {});
   
 
+
+
 // Редактирование профиля
 const userInfo = new UserInfo({
-  profileName,
-  profileDescription,
-  profileAvatar,
+    profileName,
+    profileDescription,
+    profileAvatar,
 });
 
 ////Попапы форм
@@ -71,6 +76,7 @@ const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
         changeProfileNamePopup.changeButtonOnLoad(false);
       });
   },
+
 });
 changeProfileNamePopup.setEventListeners();
 
@@ -89,6 +95,19 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
         changeAvatarImage.changeButtonOnLoad(false);
       });
   },
+    formSubmitCallBack(data) {
+        changeAvatarImage.changeButtonOnLoad(true);
+        apiRyabov
+            .changeAvatarAPI(data.linkAvatarFoto)
+            .then((res) => {
+                userInfo.setUserInfo(res);
+                changeAvatarImage.closePopup();
+            })
+            .catch((err) => console.log(err))
+            .finally(() => {
+                changeAvatarImage.changeButtonOnLoad(false);
+            });
+    },
 });
 changeAvatarImage.setEventListeners();
 
@@ -112,17 +131,11 @@ addNewCardToPage.setEventListeners();
 
 //// Классы валидации форм
 //валидация профайла
-const validatorEditProfilePopup = new FormValidator(
-  validationConfig,
-  editProfilePopup
-);
+const validatorEditProfilePopup = new FormValidator(validationConfig, editProfilePopup);
 //валидация аватара
 const validatorAvatarPopup = new FormValidator(validationConfig, avatarPopup);
 //валидация новых карточек
-const validatorNewCardPopup = new FormValidator(
-  validationConfig,
-  editMestoPopup
-);
+const validatorNewCardPopup = new FormValidator(validationConfig, editMestoPopup);
 //активация валидации
 validatorEditProfilePopup.enableValidation();
 validatorAvatarPopup.enableValidation();
@@ -130,13 +143,13 @@ validatorNewCardPopup.enableValidation();
 
 //// Слушатели
 changeAvatarButton.addEventListener("click", () => {
-  validatorAvatarPopup.resetValidation();
-  changeAvatarImage.openPopup();
+    validatorAvatarPopup.resetValidation();
+    changeAvatarImage.openPopup();
 });
 
 buttonAddCard.addEventListener("click", () => {
-  validatorNewCardPopup.resetValidation();
-  addNewCardToPage.openPopup();
+    validatorNewCardPopup.resetValidation();
+    addNewCardToPage.openPopup();
 });
 
 profileButton.addEventListener("click", () => {

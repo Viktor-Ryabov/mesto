@@ -22,6 +22,7 @@ export default class Card {
   cardGenerator() {
     this._element = this._getTemplate();
 
+
     const cardFoto = this._element.querySelector(".card__foto");
     cardFoto.src = `${this._cardImage}`;
     cardFoto.alt = `${this._cardTitle}`;

@@ -12,6 +12,7 @@ export const validationConfig = {
   submitButtonSelector: ".popup__submit-button",
   inputError: ".popup__input-error",
   errorClass: "popup__input-error_visible",
+
 };
 
 export const editMestoPopup = document.querySelector("#editFormMesto");
@@ -23,6 +24,8 @@ export const profileButton = document.querySelector("#popupOpenProfile");
 export const avatarPopup = document.querySelector("#changeAvatarPopup");
 export const changeAvatarButton = document.querySelector("#avatarButton");
 
+export const deleteCardsPopup = document.querySelector("#deleteCardsPopup");
+
 export const profileName = document.querySelector("#nameProfile");
 export const profileDescription = document.querySelector("#descriptionProfile");
 export const profileAvatar = document.querySelector("#avatarButton");
@@ -30,4 +33,6 @@ export const profileAvatar = document.querySelector("#avatarButton");
 export const cardsContainer = document.querySelector(".places");
 export const template = document.querySelector("#newCardTemplate");
 
-export const imagePopup = document.querySelector("#image-popup")
+export const imagePopup = document.querySelector("#image-popup");
+
+export const cardTemplate = document.querySelector("#newCardTemplate");
