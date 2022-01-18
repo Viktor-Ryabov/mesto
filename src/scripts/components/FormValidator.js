@@ -50,7 +50,6 @@ export class FormValidator {
   // Скрытие сообщения об ошибке
   _hideInputError() {
     this._errorElement.textContent = "";
-    console.log(this._inputError);
   }
 
   //* Скрытие ошибок и очистка полей
