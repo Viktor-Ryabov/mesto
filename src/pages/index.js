@@ -5,10 +5,9 @@ import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
 import { Card } from "../scripts/components/Cards.js";
 import UserInfo from "../scripts/components/UserInfo.js";
-
 import { Section } from "../scripts/components/Section";
-
 import { FormValidator } from "../scripts/components/FormValidator.js";
+import {PopupWithImage} from "../scripts/components/PopupWithImage";
 
 import {
     mestoAPIConfig,
@@ -27,30 +26,29 @@ import {
     deleteCardsPopup,
 } from "../scripts/utils/constants.js";
 
-import { PopupWithImage } from "../scripts/components/PopupWithImage";
-
-const apiRyabov = new Api(mestoAPIConfig);
+const mainApiData = new Api(mestoAPIConfig);
 
 const bigImages = new PopupWithImage(imagePopup);
-const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-const initialCards = new Section(initialData[0]._id, initialData[1], cardTemplate);
-const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, "");
+
+const initialData = [mainApiData.getUserInfo(), mainApiData.getCardsInfo()];
 
 //Main variables
-let currentUserData = "";
 
 //Начальная загрузка данных
 Promise.all(initialData)
-    .then(([userData, cardsData]) => {
-        initialCards.addItem(cardsData, userData, apiRyabov, bigImages, popupDeleteConfirming);
-        currentUserData = userData;
-        userInfo.setUserInfo(userData);
-        userInfo.setUserAvatar(userData);
-        userInfo.setPopupFieldsData(userData);
-        // console.log(userData);
-    })
-    .catch((error) => console.log(error))
-    .finally(() => {});
+  .then(([userData, cardsData]) => {
+    const initialCards = new Section(userData._id, cardsData[1]);
+    initialCards.addItem(cardsData, userData, mainApiData, bigImages);
+    userInfo.setUserInfo(userData);
+    userInfo.setUserAvatar(userData);
+    userInfo.setPopupFieldsData(userData);    
+    return initialCards;
+  })
+  .catch((error) => console.log(error))
+  .finally(() => {});
+  
+
+
 
 // Редактирование профиля
 const userInfo = new UserInfo({
@@ -60,25 +58,43 @@ const userInfo = new UserInfo({
 });
 
 ////Попапы форм
+// попап ольшог фото
+const bigFotoPopup = new PopupWithImage(imagePopup);
+bigFotoPopup.setEventListeners();
+
 //редактирование профайла
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
-    formSubmitCallBack(data) {
-        apiRyabov
-            .sendProfileDataToServer(data)
-            .then((res) => {
-                userInfo.setUserInfo(res);
-                changeProfileNamePopup.closePopup();
-            })
-            .catch((err) => console.log(err))
-            .finally(() => {
-                changeProfileNamePopup.changeButtonOnLoad(false);
-            });
-    },
+  formSubmitCallBack(data){
+    mainApiData
+      .sendProfileDataToServer(data)
+      .then((res) => {
+        userInfo.setUserInfo(res);
+        changeProfileNamePopup.closePopup();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        changeProfileNamePopup.changeButtonOnLoad(false);
+      });
+  },
+
 });
 changeProfileNamePopup.setEventListeners();
 
 //Редактирование аватара
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
+  formSubmitCallBack(data) {
+    changeAvatarImage.changeButtonOnLoad(true);
+    mainApiData
+      .changeAvatarAPI(data.linkAvatarFoto)
+      .then((res) => {
+        userInfo.setUserInfo(res);
+        changeAvatarImage.closePopup();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        changeAvatarImage.changeButtonOnLoad(false);
+      });
+  },
     formSubmitCallBack(data) {
         changeAvatarImage.changeButtonOnLoad(true);
         apiRyabov
@@ -97,21 +113,38 @@ changeAvatarImage.setEventListeners();
 
 //добавление карточки
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
-    formSubmitCallBack(data) {
-        addNewCardToPage.changeButtonOnLoad(true);
-        apiRyabov
-            .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
-            .then((cardData) => {
-                initialCards.addItem([cardData], currentUserData, apiRyabov, bigImages);
-                addNewCardToPage.closePopup();
-            })
-            .catch((err) => console.log(err))
-            .finally(() => {
-                addNewCardToPage.changeButtonOnLoad(false);
-            });
-    },
+  formSubmitCallBack(data) {
+    addNewCardToPage.changeButtonOnLoad(true);
+    mainApiData
+      .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
+      .then((cardData) => {
+        initialCards.addItem([cardData], currentUserData, mainApiData, bigImages);
+        addNewCardToPage.closePopup();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        addNewCardToPage.changeButtonOnLoad(false);
+      });
+  },
 });
 addNewCardToPage.setEventListeners();
+
+//// Слушатели
+changeAvatarButton.addEventListener("click", () => {
+  validatorAvatarPopup.resetValidation();
+  changeAvatarImage.openPopup();
+});
+
+buttonAddCard.addEventListener("click", () => {
+  validatorNewCardPopup.resetValidation();
+  addNewCardToPage.openPopup();
+});
+
+profileButton.addEventListener("click", () => {
+  userInfo.setPopupFieldsData();
+  validatorEditProfilePopup.resetValidation()
+  changeProfileNamePopup.openPopup();
+});
 
 //// Классы валидации форм
 //валидация профайла
@@ -125,19 +158,4 @@ validatorEditProfilePopup.enableValidation();
 validatorAvatarPopup.enableValidation();
 validatorNewCardPopup.enableValidation();
 
-//// Слушатели
-changeAvatarButton.addEventListener("click", () => {
-    validatorAvatarPopup.resetValidation();
-    changeAvatarImage.openPopup();
-});
 
-buttonAddCard.addEventListener("click", () => {
-    validatorNewCardPopup.resetValidation();
-    addNewCardToPage.openPopup();
-});
-
-profileButton.addEventListener("click", () => {
-    userInfo.setPopupFieldsData();
-    validatorEditProfilePopup.resetValidation();
-    changeProfileNamePopup.openPopup();
-});

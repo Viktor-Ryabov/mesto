@@ -10,9 +10,10 @@ export class Section {
     }
 
     //* Добавление карточки
-    addItem(cardsData, userData, apiRyabov, bigImages, popupDeleteConfirming) {
+    addItem(cardsData, userData, mainApiData, bigImages) {
         cardsData.reverse().forEach((dataObj) => {
-            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userData, apiRyabov, bigImages, this._cardTemplate, popupDeleteConfirming);
+            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userData, mainApiData, bigImages);
+
             const cardElement = card.cardGenerator();
             cardsContainer.prepend(cardElement);
         });
