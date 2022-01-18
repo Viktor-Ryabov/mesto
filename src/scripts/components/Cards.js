@@ -1,5 +1,5 @@
 export default class Card {
-    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userData, apiRyabov, bigImages) {
+    constructor(cardTitle, cardImage, cardLikes, cardOwnerId, cardId, userData, apiRyabov, bigImages, cardTemplate, popupDeleteConfirming) {
         this._cardTitle = cardTitle;
         this._cardImage = cardImage;
         this._userId = userData._id;
@@ -8,11 +8,14 @@ export default class Card {
         this._cardId = cardId;
         this._cardsApi = apiRyabov;
         this._cardBigImage = bigImages;
+        this._cardTemplate = cardTemplate;
+        this._deletingPopup = popupDeleteConfirming;
     }
 
     cardGenerator() {
         this._element = this._getTemplate();
         this._element.querySelector(".card__foto").src = `${this._cardImage}`;
+        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
         this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
         this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
         this._setEventListeners();
@@ -23,13 +26,29 @@ export default class Card {
     }
 
     _getTemplate() {
-        const cardElement = document.querySelector("#newCardTemplate").content.querySelector(".card").cloneNode(true);
+        const cardElement = this._cardTemplate.content.querySelector(".card").cloneNode(true);
         return cardElement;
     }
 
     _deleteCard() {
-        this._element.remove();
-        this._cardsApi.deleteCardsAPI(this._cardId);
+        this._deletingPopup.changeButtonOnLoad(true);
+        this._cardsApi
+            .deleteCardsAPI(this._cardId)
+            .then(() => {
+                this._element.remove();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                this._deletingPopup.changeButtonOnLoad(false);
+                this._deletingPopup.removeEventListener("submit", this._deleteCard);
+            });
+    }
+
+    _deleteConfirmPopupHandler() {
+        this._deletingPopup.openPopup();
+        // Нужно добавить класс попапа подтверждения удаления со слушателем события кнопки в попапе подтверждения, которая запустит _deleteCard()
     }
 
     _setEventListeners() {
@@ -40,7 +59,7 @@ export default class Card {
             this._cardBigImage.renderBigImages(this._cardImage, this._cardTitle);
         });
         this._element.querySelector("#deleteButton").addEventListener("click", () => {
-            this._deleteCard();
+            this._deleteConfirmPopupHandler();
         });
     }
 
