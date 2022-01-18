@@ -12,7 +12,6 @@ export const validationConfig = {
   submitButtonSelector: ".popup__submit-button",
   inputError: ".popup__input-error",
   errorClass: "popup__input-error_visible",
-
 };
 
 export const editMestoPopup = document.querySelector("#editFormMesto");

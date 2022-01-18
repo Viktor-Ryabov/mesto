@@ -1,3 +1,4 @@
+
 export class FormValidator {
   constructor(validationConfig, popupForm) {
     this._form = popupForm;
@@ -5,6 +6,7 @@ export class FormValidator {
     this._inputField = validationConfig.inputField;
     this._submitButtonSelector = validationConfig.submitButtonSelector;
     this._inputError = validationConfig.inputError;
+    console.log(this._inputError);
     this._inputs = Array.from(this._form.querySelectorAll(this._inputField));
     this._errors = Array.from(this._form.querySelectorAll(this._inputError));
     this._submitButton = this._form.querySelector(this._submitButtonSelector);
@@ -46,8 +48,9 @@ export class FormValidator {
   }
 
   // Скрытие сообщения об ошибке
-  _hideInputError(element) {
-    element.textContent = "";
+  _hideInputError() {
+    this._errorElement.textContent = "";
+    console.log(this._inputError);
   }
 
   //* Скрытие ошибок и очистка полей
