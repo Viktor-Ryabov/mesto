@@ -29,29 +29,12 @@ export default class Card {
     }
 
     _getTemplate() {
-        const cardElement = this._cardTemplate.content.querySelector(".card").cloneNode(true);
+        const cardElement = this._cardTemplate.cloneNode(true);
         return cardElement;
     }
 
-    _deleteCard() {
-        this._deletingPopup.changeButtonOnLoad(true);
-        this._cardsApi
-            .deleteCardsAPI(this._cardId)
-            .then(() => {
-                this._element.remove();
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                this._deletingPopup.changeButtonOnLoad(false);
-                this._deletingPopup.removeEventListener("submit", this._deleteCard);
-            });
-    }
-
     _deleteConfirmPopupHandler() {
-        this._deletingPopup.openPopup();
-        // Нужно добавить класс попапа подтверждения удаления со слушателем события кнопки в попапе подтверждения, которая запустит _deleteCard()
+        this._deletingPopup.openDeletePopup(this._cardId, this._element);
     }
 
     _setEventListeners() {
@@ -59,7 +42,7 @@ export default class Card {
             this._likeHandler();
         });
         this._element.querySelector(".card__foto").addEventListener("click", () => {
-            this._cardBigImage.renderBigImages(this._cardImage, this._cardTitle);
+            this._cardBigImage.openPopup(this._cardImage, this._cardTitle);
         });
         this._element.querySelector("#deleteButton").addEventListener("click", () => {
             this._deleteConfirmPopupHandler();
