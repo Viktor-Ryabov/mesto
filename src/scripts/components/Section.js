@@ -9,9 +9,9 @@ export class Section {
     }
 
     //* Добавление карточки
-    addItem(cardsData, userData, apiRyabov, bigImages) {
+    addItem(cardsData, userData, mainApiData, bigImages) {
         cardsData.reverse().forEach((dataObj) => {
-            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userData, apiRyabov, bigImages);
+            const card = new Card(dataObj.name, dataObj.link, dataObj.likes, dataObj.owner._id, dataObj._id, userData, mainApiData, bigImages);
             const cardElement = card.cardGenerator();
             cardsContainer.prepend(cardElement);
         });

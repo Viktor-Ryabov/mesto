@@ -5,10 +5,9 @@ import { Api } from "../scripts/components/Api.js";
 import { PopupWithForm } from "../scripts/components/PopupWithForm.js";
 import { Card } from "../scripts/components/Cards.js";
 import UserInfo from "../scripts/components/UserInfo.js";
-
 import { Section } from "../scripts/components/Section";
-
 import { FormValidator } from "../scripts/components/FormValidator.js";
+import {PopupWithImage} from "../scripts/components/PopupWithImage";
 
 import {
   mestoAPIConfig,
@@ -24,28 +23,27 @@ import {
   imagePopup,
   validationConfig,
 } from "../scripts/utils/constants.js";
-import { PopupWithImage } from "../scripts/components/PopupWithImage";
 
-const apiRyabov = new Api(mestoAPIConfig);
+const mainApiData = new Api(mestoAPIConfig);
 
 const bigImages = new PopupWithImage(imagePopup);
-const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
-const initialCards = new Section(initialData[0]._id, initialData[1]);
+const initialData = [mainApiData.getUserInfo(), mainApiData.getCardsInfo()];
+
 //Main variables
-let currentUserData, UserAvatar, userDescription;
 
 //Начальная загрузка данных
 Promise.all(initialData)
   .then(([userData, cardsData]) => {
-    initialCards.addItem(cardsData, userData, apiRyabov, bigImages);
-    currentUserData = userData;
+    const initialCards = new Section(userData._id, cardsData[1]);
+    initialCards.addItem(cardsData, userData, mainApiData, bigImages);
     userInfo.setUserInfo(userData);
     userInfo.setUserAvatar(userData);
-    userInfo.setPopupFieldsData(userData);
-    // console.log(userData);
+    userInfo.setPopupFieldsData(userData);    
+    return initialCards;
   })
   .catch((error) => console.log(error))
   .finally(() => {});
+  
 
 // Редактирование профиля
 const userInfo = new UserInfo({
@@ -55,10 +53,14 @@ const userInfo = new UserInfo({
 });
 
 ////Попапы форм
+// попап ольшог фото
+const bigFotoPopup = new PopupWithImage(imagePopup);
+bigFotoPopup.setEventListeners();
+
 //редактирование профайла
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
   formSubmitCallBack(data) {
-    apiRyabov
+    mainApiData
       .sendProfileDataToServer(data)
       .then((res) => {
         userInfo.setUserInfo(res);
@@ -76,7 +78,7 @@ changeProfileNamePopup.setEventListeners();
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
   formSubmitCallBack(data) {
     changeAvatarImage.changeButtonOnLoad(true);
-    apiRyabov
+    mainApiData
       .changeAvatarAPI(data.linkAvatarFoto)
       .then((res) => {
         userInfo.setUserInfo(res);
@@ -94,10 +96,10 @@ changeAvatarImage.setEventListeners();
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
   formSubmitCallBack(data) {
     addNewCardToPage.changeButtonOnLoad(true);
-    apiRyabov
+    mainApiData
       .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
       .then((cardData) => {
-        initialCards.addItem([cardData], currentUserData, apiRyabov, bigImages);
+        initialCards.addItem([cardData], currentUserData, mainApiData, bigImages);
         addNewCardToPage.closePopup();
       })
       .catch((err) => console.log(err))
@@ -142,3 +144,4 @@ profileButton.addEventListener("click", () => {
   validatorEditProfilePopup.resetValidation()
   changeProfileNamePopup.openPopup();
 });
+

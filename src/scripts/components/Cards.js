@@ -6,7 +6,7 @@ export default class Card {
     cardOwnerId,
     cardId,
     userData,
-    apiRyabov,
+    mainApiData,
     bigImages
   ) {
     this._cardTitle = cardTitle;
@@ -15,17 +15,18 @@ export default class Card {
     this._cardOwnerId = cardOwnerId;
     this._likesArray = cardLikes;
     this._cardId = cardId;
-    this._cardsApi = apiRyabov;
+    this._cardsApi = mainApiData;
     this._cardBigImage = bigImages;
   }
 
   cardGenerator() {
     this._element = this._getTemplate();
-    this._element.querySelector(".card__foto").src = `${this._cardImage}`;
-    this._element.querySelector(
-      ".card__title"
-    ).textContent = `${this._cardTitle}`;
-    this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
+
+    const cardFoto = this._element.querySelector(".card__foto");
+    cardFoto.src = `${this._cardImage}`;
+    cardFoto.alt = `${this._cardTitle}`;
+    
+    this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
     this._setEventListeners();
     this._deleteCardHandlerDeactivate();
     this._checkInitialLikes();
@@ -46,7 +47,6 @@ export default class Card {
         .deleteCardsAPI(this._cardId)
         .then(() => {
           this._element.remove();
-          console.log(123);
         })
         .catch((error) => console.log(error))
         .finally(() => {
@@ -54,27 +54,18 @@ export default class Card {
         });
   }
 
-  // deleteCard(request) {
-  //   // this._element.remove();
-  //   request
-  //     .deleteCardsAPI(this._cardId)
-  //     .then(this._element.remove());
-  // }
-
   _setEventListeners() {
     this._element
       .querySelector(".card__button-like")
       .addEventListener("click", () => {
         this._likeHandler();
       });
-    this._element.querySelector(".card__foto").addEventListener("click", () => {
-      this._cardBigImage.renderBigImages(this._cardImage, this._cardTitle);
-    });
     this._element
       .querySelector("#deleteButton")
       .addEventListener("click", () => {
         this._deleteCard();
       });
+    this._cardFoto
   }
 
   _deleteCardHandlerDeactivate() {
@@ -87,7 +78,7 @@ export default class Card {
   _likeHandler() {
     const likeHeart = this._element.querySelector(".card__button-like");
     const likeCount = this._element.querySelector(".card__number-of-likes");
-    if (!likeHeart.classList.contains("card__button-like_active")) {
+    if (!likeHeart.classList.contains("card__button-like_active")){
       this._cardsApi
         .putLikesAPI(this._cardId)
         .then((res) => {

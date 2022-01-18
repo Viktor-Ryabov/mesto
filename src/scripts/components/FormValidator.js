@@ -6,7 +6,6 @@ export class FormValidator {
     this._inputField = validationConfig.inputField;
     this._submitButtonSelector = validationConfig.submitButtonSelector;
     this._inputError = validationConfig.inputError;
-    console.log(this._inputError);
     this._inputs = Array.from(this._form.querySelectorAll(this._inputField));
     this._errors = Array.from(this._form.querySelectorAll(this._inputError));
     this._submitButton = this._form.querySelector(this._submitButtonSelector);
@@ -51,6 +50,7 @@ export class FormValidator {
   _hideInputError() {
     this._errorElement.textContent = "";
   }
+
 
   //* Скрытие ошибок и очистка полей
   _hideAllErrors() {
