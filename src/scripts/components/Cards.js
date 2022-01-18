@@ -17,6 +17,7 @@ export default class Card {
         this._element.querySelector(".card__foto").src = `${this._cardImage}`;
         this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
         this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
+        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
         this._setEventListeners();
         this._deleteCardHandlerDeactivate();
         this._checkInitialLikes();

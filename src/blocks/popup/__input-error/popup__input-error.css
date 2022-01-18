@@ -10,7 +10,7 @@
     margin-bottom: 25px;
 }
 
-.popup__input-error:last-of-type {
+.popup__input-error:nth-of-type(2) {
     margin-top: -42px;
 
 }

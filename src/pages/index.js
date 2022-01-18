@@ -28,25 +28,26 @@ import {
 } from "../scripts/utils/constants.js";
 
 import { PopupWithImage } from "../scripts/components/PopupWithImage";
-import { Popup } from "../scripts/components/Popup";
 
 const apiRyabov = new Api(mestoAPIConfig);
+
 const bigImages = new PopupWithImage(imagePopup);
 const initialData = [apiRyabov.getUserInfo(), apiRyabov.getCardsInfo()];
 const initialCards = new Section(initialData[0]._id, initialData[1], cardTemplate);
-const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, '');
+const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, "");
 
 //Main variables
-let currentUserData = '';
+let currentUserData = "";
 
 //Начальная загрузка данных
 Promise.all(initialData)
-
     .then(([userData, cardsData]) => {
         initialCards.addItem(cardsData, userData, apiRyabov, bigImages, popupDeleteConfirming);
         currentUserData = userData;
         userInfo.setUserInfo(userData);
         userInfo.setUserAvatar(userData);
+        userInfo.setPopupFieldsData(userData);
+        // console.log(userData);
     })
     .catch((error) => console.log(error))
     .finally(() => {});
@@ -57,9 +58,9 @@ const userInfo = new UserInfo({
     profileDescription,
     profileAvatar,
 });
+
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
     formSubmitCallBack(data) {
-        changeProfileNamePopup.changeButtonOnLoad(true);
         apiRyabov
             .sendProfileDataToServer(data)
             .then((res) => {
@@ -81,7 +82,6 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
         apiRyabov
             .changeAvatarAPI(data.linkAvatarFoto)
             .then((res) => {
-                console.log(res);
                 userInfo.setUserInfo(res);
                 changeAvatarImage.closePopup();
             })
@@ -93,14 +93,12 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
 });
 changeAvatarImage.setEventListeners();
 
-//////_______________
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
     formSubmitCallBack(data) {
         addNewCardToPage.changeButtonOnLoad(true);
         apiRyabov
             .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
             .then((cardData) => {
-                console.log(cardData.owner._id);
                 initialCards.addItem([cardData], currentUserData, apiRyabov, bigImages);
                 addNewCardToPage.closePopup();
             })
@@ -112,14 +110,9 @@ const addNewCardToPage = new PopupWithForm(editMestoPopup, {
 });
 addNewCardToPage.setEventListeners();
 
-buttonAddCard.addEventListener("click", () => {
-    addNewCardToPage.openPopup();
-});
-
 //// Классы валидации форм
 //валидация профайла
 const validatorEditProfilePopup = new FormValidator(validationConfig, editProfilePopup);
-
 //валидация аватара
 const validatorAvatarPopup = new FormValidator(validationConfig, avatarPopup);
 //валидация новых карточек
@@ -130,12 +123,18 @@ validatorAvatarPopup.enableValidation();
 validatorNewCardPopup.enableValidation();
 
 //// Слушатели
-// кнопка аватара
 changeAvatarButton.addEventListener("click", () => {
+    validatorAvatarPopup.resetValidation();
     changeAvatarImage.openPopup();
 });
-// кнопка профайла
+
+buttonAddCard.addEventListener("click", () => {
+    validatorNewCardPopup.resetValidation();
+    addNewCardToPage.openPopup();
+});
+
 profileButton.addEventListener("click", () => {
+    userInfo.setPopupFieldsData();
+    validatorEditProfilePopup.resetValidation();
     changeProfileNamePopup.openPopup();
 });
-// кнопка новой карточки
