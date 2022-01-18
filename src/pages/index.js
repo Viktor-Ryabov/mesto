@@ -59,6 +59,8 @@ const userInfo = new UserInfo({
     profileAvatar,
 });
 
+////Попапы форм
+//редактирование профайла
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
     formSubmitCallBack(data) {
         apiRyabov
@@ -93,6 +95,7 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
 });
 changeAvatarImage.setEventListeners();
 
+//добавление карточки
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
     formSubmitCallBack(data) {
         addNewCardToPage.changeButtonOnLoad(true);
