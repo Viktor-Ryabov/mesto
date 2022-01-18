@@ -1,3 +1,4 @@
+
 export class FormValidator {
   constructor(validationConfig, popupForm) {
     this._form = popupForm;
@@ -7,21 +8,19 @@ export class FormValidator {
     this._inputError = validationConfig.inputError;
     this._inputs = Array.from(this._form.querySelectorAll(this._inputField));
     this._errors = Array.from(this._form.querySelectorAll(this._inputError));
-    this._buttonRR = this._form.querySelector(this._submitButtonSelector);
+    this._submitButton = this._form.querySelector(this._submitButtonSelector);
   }
 
   //Выключение кнопки сабмита
   _disableSubmitButton() {
-    this._buttonRR.disabled = true;
+    this._submitButton.disabled = true;
   }
 
   _toggleButtonState() {
     if (this._isFormNotValid()) {
-      this._button.disabled = true;
-//      console.log("form not valid");
+      this._disableSubmitButton();
     } else {
-      this._button.disabled = false;
-//      console.log("form valid");
+      this._submitButton.disabled = false;
     }
   }
 
@@ -52,8 +51,9 @@ export class FormValidator {
     this._errorElement.textContent = "";
   }
 
+
   //* Скрытие ошибок и очистка полей
-  hideAllErrors() {
+  _hideAllErrors() {
     this._errors.forEach((error) => {
       error.textContent = "";
     });
@@ -61,14 +61,20 @@ export class FormValidator {
 
   //* Установка слушателей
   _setEventListeners() {
-    this._button = this._form.querySelector(this._submitButtonSelector);
-    // this._toggleButtonState();
     this._inputs.forEach((element) => {
       element.addEventListener("input", () => {
         this._isValid(element);
         this._toggleButtonState();
       });
     });
+  }
+
+  resetValidation(){
+    this._toggleButtonState();
+    this._hideAllErrors();
+    // this._inputs.forEach((element) => {
+    //   this._hideInputError(element)
+    // });
   }
 
   //* Валидация форм
