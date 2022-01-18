@@ -158,18 +158,4 @@ validatorEditProfilePopup.enableValidation();
 validatorAvatarPopup.enableValidation();
 validatorNewCardPopup.enableValidation();
 
-<<<<<<< HEAD
-=======
-//// Слушатели
-changeAvatarButton.addEventListener("click", () => {
-    validatorAvatarPopup.resetValidation();
-    changeAvatarImage.openPopup();
-});
-
-buttonAddCard.addEventListener("click", () => {
-    validatorNewCardPopup.resetValidation();
-    addNewCardToPage.openPopup();
-});
->>>>>>> 46ad5ea6490f90320c51618c9e910e6ab10fcad1
-
 
