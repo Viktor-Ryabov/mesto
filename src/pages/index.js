@@ -110,6 +110,23 @@ const addNewCardToPage = new PopupWithForm(editMestoPopup, {
 });
 addNewCardToPage.setEventListeners();
 
+//// Слушатели
+changeAvatarButton.addEventListener("click", () => {
+  validatorAvatarPopup.resetValidation();
+  changeAvatarImage.openPopup();
+});
+
+buttonAddCard.addEventListener("click", () => {
+  validatorNewCardPopup.resetValidation();
+  addNewCardToPage.openPopup();
+});
+
+profileButton.addEventListener("click", () => {
+  userInfo.setPopupFieldsData();
+  validatorEditProfilePopup.resetValidation()
+  changeProfileNamePopup.openPopup();
+});
+
 //// Классы валидации форм
 //валидация профайла
 const validatorEditProfilePopup = new FormValidator(
@@ -128,20 +145,5 @@ validatorEditProfilePopup.enableValidation();
 validatorAvatarPopup.enableValidation();
 validatorNewCardPopup.enableValidation();
 
-//// Слушатели
-changeAvatarButton.addEventListener("click", () => {
-  validatorAvatarPopup.resetValidation();
-  changeAvatarImage.openPopup();
-});
 
-buttonAddCard.addEventListener("click", () => {
-  validatorNewCardPopup.resetValidation();
-  addNewCardToPage.openPopup();
-});
-
-profileButton.addEventListener("click", () => {
-  userInfo.setPopupFieldsData();
-  validatorEditProfilePopup.resetValidation()
-  changeProfileNamePopup.openPopup();
-});
 
