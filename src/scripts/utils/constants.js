@@ -7,11 +7,12 @@ export const mestoAPIConfig = {
 };
 
 export const validationConfig = {
-    formSelector: ".popup__form",
-    inputField: ".popup__field",
-    submitButtonSelector: ".popup__submit-button",
-    inputError: ".popup__input-error",
-    errorClass: "popup__input-error_visible",
+  formSelector: ".popup__form",
+  inputField: ".popup__field",
+  submitButtonSelector: ".popup__submit-button",
+  inputError: ".popup__input-error",
+  errorClass: "popup__input-error_visible",
+
 };
 
 export const editMestoPopup = document.querySelector("#editFormMesto");

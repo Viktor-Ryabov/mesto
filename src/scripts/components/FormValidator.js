@@ -1,3 +1,4 @@
+
 export class FormValidator {
   constructor(validationConfig, popupForm) {
     this._form = popupForm;
@@ -46,9 +47,10 @@ export class FormValidator {
   }
 
   // Скрытие сообщения об ошибке
-  _hideInputError(element) {
-    element.textContent = "";
+  _hideInputError() {
+    this._errorElement.textContent = "";
   }
+
 
   //* Скрытие ошибок и очистка полей
   _hideAllErrors() {
