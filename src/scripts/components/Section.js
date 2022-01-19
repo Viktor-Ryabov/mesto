@@ -55,5 +55,4 @@ export class SectionQ {
     this._cardTemplate.prepend(item);
   }
 
-
 }
