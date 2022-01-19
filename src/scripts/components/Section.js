@@ -52,7 +52,7 @@ export class SectionQ {
   addItem(item) {
     // const card = this._renderer(item)
     // console.log(card)
-    this._cardTemplate.prepend(item);
+    this._cardTemplate.append(item);
   }
 
 }

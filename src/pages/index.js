@@ -112,6 +112,8 @@ bigFotoPopup.setEventListeners();
 //редактирование профайла
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
   formSubmitCallBack(data) {
+    const text = "Сохранение...";
+    changeProfileNamePopup.changeButtonOnLoad(true, text);
     mainApiData
       .sendProfileDataToServer(data)
       .then((res) => {
@@ -129,21 +131,9 @@ changeProfileNamePopup.setEventListeners();
 //Редактирование аватара
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
   formSubmitCallBack(data) {
-    changeAvatarImage.changeButtonOnLoad(true);
+    const text = "Сохранение...";
+    changeAvatarImage.changeButtonOnLoad(true, text);
     mainApiData
-      .changeAvatarAPI(data.linkAvatarFoto)
-      .then((res) => {
-        userInfo.setUserInfo(res);
-        changeAvatarImage.closePopup();
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        changeAvatarImage.changeButtonOnLoad(false);
-      });
-  },
-  formSubmitCallBack(data) {
-    changeAvatarImage.changeButtonOnLoad(true);
-    apiRyabov
       .changeAvatarAPI(data.linkAvatarFoto)
       .then((res) => {
         userInfo.setUserInfo(res);
@@ -161,8 +151,9 @@ changeAvatarImage.setEventListeners();
 
 const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, {
   formSubmitCallBack(data) {
+    const text = "Удаление...";
     console.log(data[1]);
-    popupDeleteConfirming.changeButtonOnLoad(true);
+    popupDeleteConfirming.changeButtonOnLoad(true, text);
     mainApiData
       .deleteCardsAPI(data[0])
       .then(() => {
@@ -180,17 +171,26 @@ popupDeleteConfirming.setEventListeners();
 //добавление карточки
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
   formSubmitCallBack(data) {
-    addNewCardToPage.changeButtonOnLoad(true);
+    const text = "Сохранение...";
+    addNewCardToPage.changeButtonOnLoad(true, text);
     mainApiData
       .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
       .then((cardData) => {
-        const newCard = new Section(
-          currentUserData._id,
-          cardData[1],
-          cardTemplate,
-          popupDeleteConfirming
+        const newCard = new SectionQ(
+          {
+              renderItems(data){
+                  // console.log(data)
+                  section.addItem(createCard(cardData));
+              },
+          },
+          cardsContainer
         );
-        newCard.renderer([cardData], currentUserData, mainApiData, bigImages);
+        // const newCard = new SectionQ(
+        //   currentUserData._id,
+        //   cardData[1],
+        //   cardTemplate,
+        //   popupDeleteConfirming
+        // newCard.renderer([cardData], currentUserData, mainApiData, bigImages);
         addNewCardToPage.closePopup();
       })
       .catch((err) => console.log(err))
