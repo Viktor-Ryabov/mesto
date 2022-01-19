@@ -25,7 +25,7 @@ export default class Card {
     // }
 
     cardGenerator(element) {
-        this._element = this._cardTemplate;
+        this._element = element;
         this._likeHeart = this._element.querySelector(".card__button-like");
         this._likeCount = this._element.querySelector(".card__number-of-likes");
         this._bucket = this._element.querySelector("#deleteButton");
