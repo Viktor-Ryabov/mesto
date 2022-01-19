@@ -24,22 +24,6 @@ export default class Card {
     //     this._deletingPopup = popupDeleteConfirming;
     // }
 
-    cardGenerator(element) {
-        this._element = element;
-        this._likeHeart = this._element.querySelector(".card__button-like");
-        this._likeCount = this._element.querySelector(".card__number-of-likes");
-        this._bucket = this._element.querySelector("#deleteButton");
-        this._element.querySelector(".card__foto").src = `${this._cardImage}`;
-        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
-        this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
-        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
-        this._setEventListeners();
-        this._deleteCardHandlerDeactivate();
-        this._checkInitialLikes();
-        
-        console.log(this._element)
-        return this._element;
-    }
     // cardGenerator() {
     //     this._element = this._getTemplate();
     //     this._likeHeart = this._element.querySelector(".card__button-like");
@@ -52,14 +36,30 @@ export default class Card {
     //     this._setEventListeners();
     //     this._deleteCardHandlerDeactivate();
     //     this._checkInitialLikes();
-
+        
+    //     console.log(this._element)
     //     return this._element;
     // }
+    cardGenerator() {
+        this._element = this._getTemplate();
+        this._likeHeart = this._element.querySelector(".card__button-like");
+        this._likeCount = this._element.querySelector(".card__number-of-likes");
+        this._bucket = this._element.querySelector("#deleteButton");
+        this._element.querySelector(".card__foto").src = `${this._cardImage}`;
+        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
+        this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
+        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
+        this._setEventListeners();
+        this._deleteCardHandlerDeactivate();
+        this._checkInitialLikes();
 
-    // _getTemplate() {
-    //     const cardElement = this._cardTemplate.cloneNode(true);
-    //     return cardElement;
-    // }
+        return this._element;
+    }
+
+    _getTemplate() {
+        const cardElement = this._cardTemplate.cloneNode(true);
+        return cardElement;
+    }
 
     _deleteConfirmPopupHandler() {
         this._deletingPopup.openDeletePopup(this._cardId, this._element);
