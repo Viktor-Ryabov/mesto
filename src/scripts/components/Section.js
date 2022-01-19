@@ -42,8 +42,8 @@ export class SectionQ {
 
   renderItems(items){
     // console.log(items)
-    items.forEach(function(item) {
-      console.log(item)
+    items.forEach((item) => {
+      // console.log(item)
       this._renderer(item);
       // console.log(item)
     })
@@ -54,8 +54,4 @@ export class SectionQ {
     // console.log(card)
     this._cardTemplate.prepend(item);
   }
-
-
-
-
 }

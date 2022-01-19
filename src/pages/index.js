@@ -86,7 +86,7 @@ const createCard = (data) => {
     cardTemplate,
     popupDeleteConfirming
   );
-  const cardElement = card.cardGenerator(data);
+  const cardElement = card.cardGenerator(cardsContainer);
   // console.log(cardElement);
   return cardElement;
 };
