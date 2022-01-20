@@ -25,6 +25,8 @@ import {
   cardTemplate,
   deleteCardsPopup,
   cardsContainer,
+  inputName,
+  inputAbout,
 } from "../scripts/utils/constants.js";
 
 let userId;
@@ -40,14 +42,13 @@ let currentUserData = "";
 //Начальная загрузка данных
 Promise.all(initialData)
   .then(([userData, cardsData]) => {
+    console.log(userData.name);
     userId = userData._id;
     userInfo.setUserInfo(userData);
     userInfo.setUserAvatar(userData);
-    userInfo.setPopupFieldsData(userData);
+    inputName.value = userData.name;
+    inputAbout.value = userData.about;
     currentUserData = userData;
-
-    console.log(cardsData);
-
     section.renderItems(cardsData);
   })
   .catch((error) => console.log(error))
@@ -91,7 +92,8 @@ bigFotoPopup.setEventListeners();
 //редактирование профайла
 const changeProfileNamePopup = new PopupWithForm(editProfilePopup, {
   formSubmitCallBack(data) {
-    changeProfileNamePopup.changeButtonOnLoad(true);
+    const text = "Сохраняем...";
+    changeProfileNamePopup.changeButtonOnLoad(true, text);
     mainApiData
       .sendProfileDataToServer(data)
       .then((res) => {
@@ -111,7 +113,8 @@ changeProfileNamePopup.setEventListeners();
 //Редактирование аватара
 const changeAvatarImage = new PopupWithForm(avatarPopup, {
   formSubmitCallBack(data) {
-    changeAvatarImage.changeButtonOnLoad(true);
+    const text = "Сохраняем...";
+    changeAvatarImage.changeButtonOnLoad(true, text);
     mainApiData
       .changeAvatarAPI(data.linkAvatarFoto)
       .then((res) => {
@@ -131,14 +134,15 @@ changeAvatarImage.setEventListeners();
 // Удаление карточек
 
 const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, {
-  formSubmitCallBack(data) {
-    const text = "Удаление...";
-    console.log(data[1]);
-    popupDeleteConfirming.changeButtonOnLoad(true);
+  formSubmitCallBack([currentCardId, currentElement]) {
+    console.log(currentCardId);
+    console.log(currentElement);
+    const text = "Удаляем...";
+    popupDeleteConfirming.changeButtonOnLoad(true, text);
     mainApiData
-      .deleteCardsAPI(data[0])
+      .deleteCardsAPI(currentCardId)
       .then(() => {
-        data[1].remove();
+        currentElement.remove();
       })
       .then(() => {
         popupDeleteConfirming.closePopup();
@@ -154,7 +158,8 @@ popupDeleteConfirming.setEventListeners();
 //добавление карточки
 const addNewCardToPage = new PopupWithForm(editMestoPopup, {
   formSubmitCallBack(data) {
-    addNewCardToPage.changeButtonOnLoad(true);
+    const text = "Сохраняем...";
+    addNewCardToPage.changeButtonOnLoad(true, text);
     mainApiData
       .addNewCadrsAPI(data.mestoName, data.linkFotoMesto)
       .then((cardData) => {
@@ -183,7 +188,6 @@ buttonAddCard.addEventListener("click", () => {
 });
 
 profileButton.addEventListener("click", () => {
-  userInfo.setPopupFieldsData();
   validatorEditProfilePopup.resetValidation();
   changeProfileNamePopup.openPopup();
 });

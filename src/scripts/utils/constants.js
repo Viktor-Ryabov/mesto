@@ -35,3 +35,6 @@ export const cardTemplate = document.querySelector("#newCardTemplate").content.q
 export const imagePopup = document.querySelector("#image-popup");
 export const bigImage = imagePopup.querySelector(".popup__foto");
 export const bigImageTitle = imagePopup.querySelector(".popup__discription");
+
+export const inputName = document.querySelector("#nameEditForm");
+export const inputAbout = document.querySelector("#descriptionEditForm");
