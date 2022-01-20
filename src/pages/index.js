@@ -33,7 +33,6 @@ let userId;
 
 const mainApiData = new Api(mestoAPIConfig);
 
-const bigImages = new PopupWithImage(imagePopup);
 const initialData = [mainApiData.getUserInfo(), mainApiData.getCardsInfo()];
 
 let currentUserData = "";
@@ -41,6 +40,7 @@ let currentUserData = "";
 
 //Начальная загрузка данных
 Promise.all(initialData)
+
   .then(([userData, cardsData]) => {
     console.log(userData.name);
     userId = userData._id;
@@ -63,16 +63,11 @@ const userInfo = new UserInfo({
 
 ////Create card
 const createCard = (data) => {
-  const card = new Card(
-    data,
-    userId,
-    mainApiData,
-    bigImages,
-    cardTemplate,
-    popupDeleteConfirming
-  );
-  const cardElement = card.cardGenerator(data);
-  return cardElement;
+
+    const card = new Card(data, userId, mainApiData, openBigImage, cardTemplate, openDeletePopup);
+    const cardElement = card.cardGenerator(data);
+    return cardElement;
+
 };
 
 const section = new Section(
@@ -87,6 +82,9 @@ const section = new Section(
 ////Попапы форм
 // попап большого фото
 const bigFotoPopup = new PopupWithImage(imagePopup);
+const openBigImage = function (src, alt) {
+    bigFotoPopup.openPopup(src, alt);
+};
 bigFotoPopup.setEventListeners();
 
 //редактирование профайла
@@ -132,6 +130,10 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
 changeAvatarImage.setEventListeners();
 
 // Удаление карточек
+
+const openDeletePopup = function (id, element) {
+    popupDeleteConfirming.openPopup(id, element);
+};
 
 const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, {
   formSubmitCallBack([currentCardId, currentElement]) {

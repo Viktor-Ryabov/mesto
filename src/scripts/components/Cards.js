@@ -1,5 +1,5 @@
 export default class Card {
-    constructor(data, userData, apiData, bigImages, cardTemplate, popupDeleteConfirming) {
+    constructor(data, userData, apiData, bigImagesPopup, cardTemplate, openDeletePopup) {
         this._cardTitle = data.name;
         this._cardImage = data.link;
         this._userId = userData;
@@ -7,20 +7,21 @@ export default class Card {
         this._likesArray = data.likes;
         this._cardId = data._id;
         this._cardsApi = apiData;
-        this._cardBigImage = bigImages;
+        this._cardBigImagePopup = bigImagesPopup;
         this._cardTemplate = cardTemplate;
-        this._deletingPopup = popupDeleteConfirming;
+        this._deletingPopup = openDeletePopup;
     }
 
     cardGenerator() {
         this._element = this._getTemplate();
         this._likeHeart = this._element.querySelector(".card__button-like");
         this._likeCount = this._element.querySelector(".card__number-of-likes");
+        this._cardImageContainer = this._element.querySelector(".card__foto");
         this._bucket = this._element.querySelector("#deleteButton");
-        this._element.querySelector(".card__foto").src = `${this._cardImage}`;
-        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
+        this._cardImageContainer.src = `${this._cardImage}`;
+        this._cardImageContainer.alt = `${this._cardTitle}`;
         this._element.querySelector(".card__title").textContent = `${this._cardTitle}`;
-        this._element.querySelector(".card__foto").alt = `${this._cardTitle}`;
+        this._cardImageContainer.alt = `${this._cardTitle}`;
         this._setEventListeners();
         this._deleteCardHandlerDeactivate();
         this._checkInitialLikes();
@@ -34,17 +35,17 @@ export default class Card {
     }
 
     _deleteConfirmPopupHandler() {
-        this._deletingPopup.openDeletePopup(this._cardId, this._element);
+        this._deletingPopup(this._cardId, this._element);
     }
 
     _setEventListeners() {
-        this._element.querySelector(".card__button-like").addEventListener("click", () => {
+        this._likeHeart.addEventListener("click", () => {
             this._likeHandler();
         });
-        this._element.querySelector(".card__foto").addEventListener("click", () => {
-            this._cardBigImage.openPopup(this._cardImage, this._cardTitle);
+        this._cardImageContainer.addEventListener("click", () => {
+            this._cardBigImagePopup(this._cardImage, this._cardTitle);
         });
-        this._element.querySelector("#deleteButton").addEventListener("click", () => {
+        this._bucket.addEventListener("click", () => {
             this._deleteConfirmPopupHandler();
         });
     }
@@ -90,7 +91,7 @@ export default class Card {
                 }
             });
         } else {
-            this._element.querySelector(".card__number-of-likes").textContent = 0;
+            this._likeCount.textContent = 0;
         }
     }
 }
