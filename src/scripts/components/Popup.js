@@ -8,13 +8,11 @@ export class Popup {
     openPopup() {
         document.addEventListener("keyup", this._closeByEscape);
         this._popupElement.classList.add("popup_opened");
-        console.log("added EventListener");
     }
 
     closePopup() {
         document.removeEventListener("keyup", this._closeByEscape);
         this._popupElement.classList.remove("popup_opened");
-        console.log("removed EventListener"); //проверим-с =))
     }
 
     _closeByEscape(event) {

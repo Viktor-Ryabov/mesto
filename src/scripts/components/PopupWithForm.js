@@ -23,7 +23,7 @@ export class PopupWithForm extends Popup {
             data[input.name] = input.value;
         });
         if (this._element) {
-			data = [this._cardId, this._element]
+            data = [this._cardId, this._element];
             return data;
         }
         return data;
@@ -37,7 +37,7 @@ export class PopupWithForm extends Popup {
         }
     }
 
-    openDeletePopup(cardId, element) {
+    openPopup(cardId, element) {
         super.openPopup();
         this._cardId = cardId;
         this._element = element;

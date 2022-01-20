@@ -31,7 +31,6 @@ let userId;
 
 const mainApiData = new Api(mestoAPIConfig);
 
-const bigImages = new PopupWithImage(imagePopup);
 const initialData = [mainApiData.getUserInfo(), mainApiData.getCardsInfo()];
 
 let currentUserData = "";
@@ -45,8 +44,6 @@ Promise.all(initialData)
         userInfo.setUserAvatar(userData);
         userInfo.setPopupFieldsData(userData);
         currentUserData = userData;
-
-        console.log(cardsData);
 
         section.renderItems(cardsData);
     })
@@ -62,7 +59,7 @@ const userInfo = new UserInfo({
 
 ////Create card
 const createCard = (data) => {
-    const card = new Card(data, userId, mainApiData, bigImages, cardTemplate, popupDeleteConfirming);
+    const card = new Card(data, userId, mainApiData, openBigImage, cardTemplate, openDeletePopup);
     const cardElement = card.cardGenerator(data);
     return cardElement;
 };
@@ -79,6 +76,9 @@ const section = new Section(
 ////Попапы форм
 // попап большого фото
 const bigFotoPopup = new PopupWithImage(imagePopup);
+const openBigImage = function (src, alt) {
+    bigFotoPopup.openPopup(src, alt);
+};
 bigFotoPopup.setEventListeners();
 
 //редактирование профайла
@@ -118,6 +118,10 @@ const changeAvatarImage = new PopupWithForm(avatarPopup, {
 changeAvatarImage.setEventListeners();
 
 // Удаление карточек
+
+const openDeletePopup = function (id, element) {
+    popupDeleteConfirming.openPopup(id, element);
+};
 
 const popupDeleteConfirming = new PopupWithForm(deleteCardsPopup, {
     formSubmitCallBack(data) {
