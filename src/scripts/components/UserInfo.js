@@ -25,9 +25,4 @@ export default class UserInfo {
         this._description.textContent = userInfo.about;
         this.setUserAvatar(userInfo);
     }
-
-    setPopupFieldsData() {
-        document.querySelector("#nameEditForm").value = this._name.textContent;
-        document.querySelector("#descriptionEditForm").value = this._description.textContent;
-    }
 }

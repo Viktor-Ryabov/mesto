@@ -23,21 +23,21 @@ export class PopupWithForm extends Popup {
             data[input.name] = input.value;
         });
         if (this._element) {
-			data = [this._cardId, this._element]
+            data = [this._cardId, this._element];
             return data;
         }
         return data;
     }
 
-    changeButtonOnLoad(isLoading) {
+    changeButtonOnLoad(isLoading, text) {
         if (isLoading) {
-            this._submitButton.textContent = `Сохранение...`;
+            this._submitButton.textContent = `${text}`;
         } else {
             this._submitButton.textContent = "Сохранить";
         }
     }
 
-    openDeletePopup(cardId, element) {
+    openPopup(cardId, element) {
         super.openPopup();
         this._cardId = cardId;
         this._element = element;
